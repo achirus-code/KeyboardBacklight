@@ -1,0 +1,43 @@
+/* KeyboardBacklight – es */
+
+"Keyboard Backlight" = "Retroiluminación del teclado";
+"Capture keys on/off" = "Capturar teclas";
+"No keyboard backlight found" = "No se encontró retroiluminación del teclado";
+"Adjust to ambient light" = "Ajustar según la luz ambiental";
+"In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off." = "Con mucha luz, macOS apaga entonces por completo la retroiluminación. Pulsar una tecla desactiva el ajuste automático.";
+"Keys" = "Teclas";
+"Darker" = "Más oscuro";
+"Brighter" = "Más claro";
+"Swap" = "Intercambiar";
+"Default" = "Predeterminado";
+"Hold ⌥⇧ for finer steps" = "Mantén ⌥⇧ para pasos más finos";
+"Show overlay when changing" = "Mostrar indicador al cambiar";
+"Hide menu bar icon" = "Ocultar icono de la barra de menús";
+"To bring it back, open the app again (Finder, Spotlight)." = "Para recuperarlo, vuelve a abrir la app (Finder, Spotlight).";
+"Launch at login" = "Abrir al iniciar sesión";
+"Quit" = "Salir";
+"Close" = "Cerrar";
+"Press a key … (Esc)" = "Pulsa una tecla … (Esc)";
+"Cancel" = "Cancelar";
+"Change" = "Cambiar";
+"Accessibility access missing" = "Falta el acceso de accesibilidad";
+"Without it, KeyboardBacklight can't capture the brightness keys." = "Sin él, KeyboardBacklight no puede capturar las teclas de brillo.";
+"Open System Settings" = "Abrir Ajustes del Sistema";
+"Key %lld" = "Tecla %lld";
+"Special key %lld" = "Tecla especial %lld";
+
+/* Key names */
+"Dictation 🎙" = "Dictado 🎙";
+"Do Not Disturb 🌙" = "No molestar 🌙";
+"Volume Up" = "Subir volumen";
+"Volume Down" = "Bajar volumen";
+"Display Brighter" = "Pantalla más brillante";
+"Display Darker" = "Pantalla más oscura";
+"Mute" = "Silenciar";
+"Play/Pause ▶︎⏸" = "Reproducir/Pausa ▶︎⏸";
+"Next ▶▶" = "Siguiente ▶▶";
+"Previous ◀◀" = "Anterior ◀◀";
+"Fast Forward" = "Avance rápido";
+"Rewind ◀◀" = "Retroceso ◀◀";
+"Keyboard Brighter" = "Teclado más brillante";
+"Keyboard Darker" = "Teclado más oscuro";

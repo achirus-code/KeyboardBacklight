@@ -12,11 +12,11 @@ enum KeyTrigger: Codable, Hashable {
     var label: String {
         switch self {
         case .key(let code):
-            if let name = Self.keyNames[code] { return name }
-            return "Key \(code)"
+            if let name = Self.keyNames[code] { return String(localized: String.LocalizationValue(name)) }
+            return String(localized: "Key \(code)")
         case .media(let code):
-            if let name = Self.mediaNames[code] { return name }
-            return "Special key \(code)"
+            if let name = Self.mediaNames[code] { return String(localized: String.LocalizationValue(name)) }
+            return String(localized: "Special key \(code)")
         }
     }
 

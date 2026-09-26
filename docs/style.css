@@ -486,6 +486,25 @@ p { margin: 0; }
 @media (max-width: 860px) { .story { grid-template-columns: 1fr; } }
 
 /* Funktionen */
+/* ——— Video ——— */
+.video-section { padding-top: 24px; }
+.video-frame {
+  position: relative; max-width: 960px; margin: 0 auto; border-radius: var(--radius); overflow: hidden;
+  border: 1px solid var(--border); background: var(--bg-2);
+  box-shadow: 0 40px 90px -40px rgb(255 179 71 / 0.35), 0 20px 60px -30px rgb(0 0 0 / 0.8);
+}
+.video-frame video { display: block; width: 100%; height: auto; cursor: pointer; }
+.video-toggle {
+  position: absolute; right: 14px; bottom: 14px; width: 38px; height: 38px; border-radius: 50%;
+  display: grid; place-items: center; border: 1px solid var(--border); color: var(--text);
+  background: rgb(7 9 26 / 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  cursor: pointer; opacity: 0.75; transition: opacity 0.2s;
+}
+.video-toggle:hover, .video-toggle:focus-visible { opacity: 1; }
+.video-toggle svg { width: 14px; height: 14px; fill: currentColor; }
+.video-toggle .i-play, .video-toggle.is-paused .i-pause { display: none; }
+.video-toggle.is-paused .i-play { display: inline; }
+
 .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
 .feature { padding: 26px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s, transform 0.2s; }
 .feature:hover { border-color: rgb(255 210 122 / 0.3); transform: translateY(-2px); }

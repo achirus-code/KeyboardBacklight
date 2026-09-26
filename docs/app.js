@@ -25,18 +25,18 @@
 
   // ——— Tastatur (MacBook, deutsches Layout) ———
   const FN = [
-    ['f1', 'i-sun-sm', 'Display Darker'],
-    ['f2', 'i-sun-lg', 'Display Brighter'],
+    ['f1', 'i-sun-sm', 'Bildschirm dunkler'],
+    ['f2', 'i-sun-lg', 'Bildschirm heller'],
     ['f3', 'i-mission', 'Mission Control'],
     ['f4', 'i-search', 'Spotlight 🔍'],
-    ['f5', 'i-mic', 'Dictation 🎙'],
-    ['f6', 'i-moon', 'Do Not Disturb 🌙'],
-    ['f7', 'i-rewind', 'Previous ◀◀'],
-    ['f8', 'i-playpause', 'Play/Pause ▶︎⏸'],
-    ['f9', 'i-forward', 'Next ▶▶'],
-    ['f10', 'i-speaker', 'Mute'],
-    ['f11', 'i-vol-down', 'Volume Down'],
-    ['f12', 'i-vol-up', 'Volume Up'],
+    ['f5', 'i-mic', 'Diktat 🎙'],
+    ['f6', 'i-moon', 'Nicht stören 🌙'],
+    ['f7', 'i-rewind', 'Zurück ◀◀'],
+    ['f8', 'i-playpause', 'Wiedergabe/Pause ▶︎⏸'],
+    ['f9', 'i-forward', 'Weiter ▶▶'],
+    ['f10', 'i-speaker', 'Ton aus'],
+    ['f11', 'i-vol-down', 'Leiser'],
+    ['f12', 'i-vol-up', 'Lauter'],
   ];
   // Physische Position → KeyboardEvent.code (deutsches Layout auf US-Codes)
   const LETTER_CODES = { Z: 'KeyY', Ü: 'BracketLeft', Ö: 'Semicolon', Ä: 'Quote' };
@@ -106,8 +106,8 @@
 
   // ——— Zustand ———
   const DEFAULTS = {
-    darker: [{ id: 'f5', label: 'Dictation 🎙' }, { id: 'f5', label: 'F5' }],
-    brighter: [{ id: 'f6', label: 'Do Not Disturb 🌙' }, { id: 'f6', label: 'F6' }],
+    darker: [{ id: 'f5', label: 'Diktat 🎙' }, { id: 'f5', label: 'F5' }],
+    brighter: [{ id: 'f6', label: 'Nicht stören 🌙' }, { id: 'f6', label: 'F6' }],
   };
   const state = {
     brightness: 6 / 16,
@@ -212,7 +212,7 @@
 
   function assign(id) {
     const action = state.learning;
-    const trigger = { id, label: KEYS[id].fnLabel ? KEYS[id].name : `Key ${KEYS[id].name}` };
+    const trigger = { id, label: KEYS[id].fnLabel ? KEYS[id].name : `Taste ${KEYS[id].name}` };
     state.darker = state.darker.filter(t => t.id !== id);
     state.brighter = state.brighter.filter(t => t.id !== id);
     state[action] = [trigger];
@@ -384,10 +384,10 @@
 
     ['darker', 'brighter'].forEach(action => {
       const learning = state.learning === action;
-      el.labels[action].textContent = learning ? 'Press a key … (Esc)' : labelFor(action);
+      el.labels[action].textContent = learning ? 'Taste drücken … (Esc)' : labelFor(action);
       el.labels[action].classList.toggle('is-learning', learning);
     });
-    el.learnButtons.forEach(btn => { btn.textContent = state.learning === btn.dataset.learn ? 'Cancel' : 'Change'; });
+    el.learnButtons.forEach(btn => { btn.textContent = state.learning === btn.dataset.learn ? 'Abbrechen' : 'Ändern'; });
 
     el.hudUse.setAttribute('href', b > 0 ? '#i-light-max' : '#i-light-min');
     const lit = Math.round(b * 16);
@@ -405,6 +405,34 @@
   }
   tick();
   setInterval(tick, 15000);
+
+  // ——— Demo-Video: anhalten/abspielen, bei „Bewegung reduzieren“ kein Autoplay ———
+  const video = $('#demo-video');
+  const videoToggle = $('#video-toggle');
+  if (video && videoToggle) {
+    const sync = () => {
+      videoToggle.classList.toggle('is-paused', video.paused);
+      videoToggle.setAttribute('aria-label', video.paused ? 'Video abspielen' : 'Video anhalten');
+    };
+    let userPaused = reduceMotion;
+    if (reduceMotion) { video.removeAttribute('autoplay'); video.pause(); }
+    const toggle = () => {
+      userPaused = !video.paused;
+      if (userPaused) video.pause(); else video.play().catch(() => {});
+    };
+    videoToggle.addEventListener('click', toggle);
+    video.addEventListener('click', toggle);
+    // Nur abspielen, solange das Video zu sehen ist (Browser halten Autoplay außerhalb des Bildes oft an)
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting && !userPaused) video.play().catch(() => {});
+        else if (!entry.isIntersecting) video.pause();
+      }, { threshold: 0.25 }).observe(video);
+    }
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    sync();
+  }
 
   // ——— Sanftes Einblenden beim Scrollen ———
   if (!reduceMotion && 'IntersectionObserver' in window) {

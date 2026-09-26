@@ -7,6 +7,9 @@ A macOS menu bar app that puts keyboard backlight control back on the keys – l
 - 16 steps, finer steps with ⌥⇧
 - Overlay with a brightness bar, menu bar icon in the style of the old macOS symbol
 - Keys can be reassigned, icon can be hidden, launch at login
+- In English, German, French, Spanish and Italian (follows the system language)
+
+[![Demo video: F6 makes the keyboard brighter, F5 darker](docs/img/video-poster.jpg)](https://achirus-code.github.io/KeyboardBacklight/#video)
 
 Tested on a MacBook Air M3 with macOS 26.
 
