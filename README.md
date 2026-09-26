@@ -27,3 +27,13 @@ Beim ersten Start fragt macOS nach dem **Bedienungshilfen-Zugriff** – ohne ihn
 - Tasten über einen `CGEventTap` (Mond-Taste = Tastencode 178, Zurück = Media-Key `NX_KEYTYPE_REWIND`)
 - Bei hellem Umgebungslicht hält die Helligkeitsautomatik die Beleuchtung aus; sie wird deshalb beim ersten Tastendruck abgeschaltet (im Menü wieder aktivierbar)
 - App-Icon: `swift Scripts/make-icon.swift`
+
+## Website
+
+Die Projektseite liegt in `docs/` – statisches HTML, CSS und JavaScript ohne Build-Schritt und ohne externe Abhängigkeiten. Sie enthält eine interaktive Vorschau der App (Tastatur, Einblendung, Menüleisten-Symbol, Einstellungsfenster).
+
+```bash
+python3 -m http.server -d docs   # lokal ansehen: http://localhost:8000
+```
+
+Veröffentlichen über GitHub Pages: *Settings → Pages → Deploy from a branch → `main` / `/docs`*.
