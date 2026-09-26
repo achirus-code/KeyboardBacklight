@@ -466,7 +466,6 @@
   // ——— Sprachwahl merken (steuert die automatische Weiterleitung auf der deutschen Seite) ———
   $$('.lang-switch a').forEach(a => a.addEventListener('click', () => {
     try { localStorage.setItem('kb-lang', a.dataset.lang); } catch (e) {}
-    a.href = a.getAttribute('href').split('#')[0] + location.hash;
   }));
 
   // ——— Sanftes Einblenden beim Scrollen ———
