@@ -36,4 +36,4 @@ Die Projektseite liegt in `docs/` – statisches HTML, CSS und JavaScript ohne B
 python3 -m http.server -d docs   # lokal ansehen: http://localhost:8000
 ```
 
-Veröffentlichen über GitHub Pages: *Settings → Pages → Deploy from a branch → `main` / `/docs`*.
+Veröffentlicht wird sie per GitHub Actions (`.github/workflows/pages.yml`) bei jeder Änderung in `docs/` auf `main`. Einmalig nötig: *Settings → Pages → Source: GitHub Actions*.
