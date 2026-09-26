@@ -2,7 +2,7 @@ import AppKit
 import Combine
 import os
 
-/// Zentraler Zustand: Helligkeit, Tastenbelegung, Einstellungen.
+/// Central state: brightness, key bindings, settings.
 @MainActor
 final class AppState: ObservableObject {
     enum Action { case darker, brighter }
@@ -16,17 +16,17 @@ final class AppState: ObservableObject {
 
     @Published var enabled: Bool { didSet { defaults.set(enabled, forKey: "enabled") } }
     @Published var showHUD: Bool { didSet { defaults.set(showHUD, forKey: "showHUD") } }
-    /// Menüleisten-Icon ausblenden. Wirkt sofort; nur ein manueller Start oder erneutes Öffnen
-    /// zeigt Icon und Einstellungen wieder (siehe `StatusItemController.reveal`).
+    /// Hides the menu bar icon. Takes effect immediately; only a manual launch or reopening the app
+    /// shows the icon and settings again (see `StatusItemController.reveal`).
     @Published var hideIcon: Bool {
         didSet {
             defaults.set(hideIcon, forKey: "hideIcon")
             iconVisible = !hideIcon
         }
     }
-    /// Ob das Menüleisten-Icon gerade eingeblendet ist (bei `hideIcon` nur, solange die Einstellungen offen sind)
+    /// Whether the menu bar icon is currently shown (with `hideIcon` only while the settings are open)
     @Published var iconVisible = true {
-        didSet { if iconVisible != oldValue { log.info("Menüleisten-Icon \(self.iconVisible ? "eingeblendet" : "ausgeblendet", privacy: .public)") } }
+        didSet { if iconVisible != oldValue { log.info("Menu bar icon \(self.iconVisible ? "shown" : "hidden", privacy: .public)") } }
     }
     @Published private(set) var darkerKeys: [KeyTrigger] { didSet { save(darkerKeys, "darkerKeys") } }
     @Published private(set) var brighterKeys: [KeyTrigger] { didSet { save(brighterKeys, "brighterKeys") } }
@@ -39,7 +39,7 @@ final class AppState: ObservableObject {
     private var accessibilityTimer: Timer?
     private var lastChange = Date.distantPast
 
-    /// 16 Stufen wie früher; mit ⌥⇧ gedrückt Viertelstufen (64).
+    /// 16 steps like before; with ⌥⇧ held, quarter steps (64).
     private let steps = 16.0
     private let fineSteps = 64.0
 
@@ -62,14 +62,14 @@ final class AppState: ObservableObject {
         startInterceptor()
     }
 
-    // MARK: - Menüleisten-Icon
+    // MARK: - Menu bar icon
 
     func popupDidClose() {
-        // Nach dem Schließen der Einstellungen wieder verstecken
+        // Hide the icon again once the settings are closed
         if hideIcon { iconVisible = false }
     }
 
-    // MARK: - Helligkeit
+    // MARK: - Brightness
 
     func refresh() {
         brightness = Double(backlight.brightness)
@@ -77,7 +77,7 @@ final class AppState: ObservableObject {
     }
 
     func setBrightness(_ value: Double, showOverlay: Bool = false) {
-        // Bei hellem Umgebungslicht hält die Automatik die Beleuchtung aus → abschalten
+        // In bright ambient light the automatic adjustment keeps the backlight off → turn it off
         if backlight.autoBrightness {
             backlight.autoBrightness = false
             autoBrightness = false
@@ -91,8 +91,8 @@ final class AppState: ObservableObject {
 
     func step(_ action: Action, fine: Bool = false) {
         let n = fine ? fineSteps : steps
-        // Während schneller Tastendrücke den eigenen Wert nehmen (die Hardware blendet noch über),
-        // sonst den aktuellen Systemwert – die Automatik kann ihn inzwischen geändert haben.
+        // During rapid key presses use our own value (the hardware is still fading),
+        // otherwise the current system value – the automatic adjustment may have changed it.
         if Date().timeIntervalSince(lastChange) > 2 { refresh() }
         let current = (brightness * n).rounded()
         let next = current + (action == .brighter ? 1 : -1)
@@ -101,16 +101,16 @@ final class AppState: ObservableObject {
 
     func setAutoBrightness(_ on: Bool) {
         backlight.autoBrightness = on
-        // Die Automatik übernimmt verzögert – kurz danach den tatsächlichen Wert lesen
+        // The automatic adjustment takes over with a delay – read the actual value shortly after
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in self?.refresh() }
         autoBrightness = on
     }
 
-    // MARK: - Tasten
+    // MARK: - Keys
 
     private func handle(_ press: KeyInterceptor.Press) -> Bool {
         if let action = learning {
-            if press.trigger == .key(53) {  // Esc bricht ab
+            if press.trigger == .key(53) {  // Esc cancels
                 learning = nil
                 return true
             }
@@ -128,7 +128,7 @@ final class AppState: ObservableObject {
         } else {
             return false
         }
-        // Gedrückt halten wiederholt ~30× pro Sekunde – auf ein angenehmes Tempo bremsen
+        // Holding a key repeats ~30× per second – slow it down to a comfortable pace
         if press.isRepeat && Date().timeIntervalSince(lastChange) < 0.09 { return true }
         let fine = press.flags.contains(.maskAlternate) && press.flags.contains(.maskShift)
         step(action, fine: fine)
@@ -166,7 +166,7 @@ final class AppState: ObservableObject {
         brighterKeys = KeyTrigger.defaultBrighter
     }
 
-    // MARK: - Bedienungshilfen
+    // MARK: - Accessibility
 
     private func startInterceptor() {
         hasAccessibility = KeyInterceptor.hasAccessibility
@@ -175,7 +175,7 @@ final class AppState: ObservableObject {
             return
         }
         KeyInterceptor.requestAccessibility()
-        // Warten, bis der Zugriff in den Systemeinstellungen erteilt wurde
+        // Wait until access has been granted in System Settings
         accessibilityTimer?.invalidate()
         accessibilityTimer = Timer.scheduledTimer(withTimeInterval: 1.5, repeats: true) { [weak self] timer in
             MainActor.assumeIsolated {
@@ -193,7 +193,7 @@ final class AppState: ObservableObject {
         NSWorkspace.shared.open(url)
     }
 
-    // MARK: - Speichern
+    // MARK: - Persistence
 
     private func save(_ keys: [KeyTrigger], _ key: String) {
         defaults.set(try? JSONEncoder().encode(keys), forKey: key)

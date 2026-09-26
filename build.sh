@@ -1,27 +1,31 @@
 #!/bin/bash
-# Baut KeyboardBacklight.app (Release) im Projektordner.
+# Builds KeyboardBacklight.app (release) in the project folder.
 set -euo pipefail
 cd "$(dirname "$0")"
 
-swift build -c release
+# UNIVERSAL=1 builds for Apple silicon and Intel (requires Xcode, not just the Command Line Tools)
+ARGS=(-c release)
+[[ "${UNIVERSAL:-}" == 1 ]] && ARGS+=(--arch arm64 --arch x86_64)
+swift build "${ARGS[@]}"
+BIN="$(swift build "${ARGS[@]}" --show-bin-path)"
 [[ -f Resources/AppIcon.icns ]] || swift Scripts/make-icon.swift
 
 APP=KeyboardBacklight.app
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp .build/release/KeyboardBacklight "$APP/Contents/MacOS/KeyboardBacklight"
+cp "$BIN/KeyboardBacklight" "$APP/Contents/MacOS/KeyboardBacklight"
 cp Info.plist "$APP/Contents/Info.plist"
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
-# Ad-hoc-Signatur mit fester Anforderung (nur Bundle-ID): So bleibt der
-# Bedienungshilfen-Zugriff auch nach einem Neubau erhalten.
+# Ad-hoc signature with a fixed requirement (bundle ID only): this way accessibility
+# access is kept after a rebuild.
 codesign --force --sign - -r='designated => identifier "de.achirus.keyboardbacklight"' "$APP" >/dev/null
-echo "Fertig: $(pwd)/$APP"
+echo "Done: $(pwd)/$APP"
 
-# Mit "./build.sh install" nach /Applications installieren und starten
+# "./build.sh install" also installs to /Applications and launches the app
 if [[ "${1:-}" == "install" ]]; then
     pkill -x KeyboardBacklight || true
     rm -rf "/Applications/$APP"
     ditto "$APP" "/Applications/$APP"
-    echo "Installiert: /Applications/$APP"
+    echo "Installed: /Applications/$APP"
     open "/Applications/$APP"
 fi

@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-/// Einblendung wie beim alten macOS: Symbol und 16 Segmente, unten mittig auf dem Bildschirm.
+/// Overlay like in older macOS: symbol and 16 segments, at the bottom center of the screen.
 @MainActor
 final class BrightnessHUD {
     private let model = Model()

@@ -2,7 +2,7 @@ import AppKit
 import Combine
 import SwiftUI
 
-/// Menüleisten-Icon mit Popover. Wird je nach `AppState.iconVisible` hinzugefügt oder entfernt.
+/// Menu bar icon with popover. Added or removed depending on `AppState.iconVisible`.
 @MainActor
 final class StatusItemController: NSObject, NSPopoverDelegate {
     private let state: AppState
@@ -29,11 +29,11 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
             .store(in: &subscriptions)
     }
 
-    /// Manueller Start bzw. erneutes Öffnen: Icon einblenden und Einstellungen öffnen. Sie bleiben
-    /// offen, bis der Benutzer sie schließt – ein Klick daneben schließt sie nicht.
+    /// Manual launch or reopening: show the icon and open the settings. They stay open
+    /// until the user closes them – clicking outside doesn't close them.
     func reveal() {
         state.iconVisible = true
-        // Dem frisch angelegten Icon einen Moment geben, bis es in der Menüleiste platziert ist
+        // Give the newly created icon a moment to be placed in the menu bar
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
             self?.showPopover(pinned: true)
         }

@@ -1,22 +1,22 @@
 import Foundation
 
-/// Eine Taste, die eine Aktion auslöst. Die obere Tastenreihe liefert je nach Taste
-/// und Einstellung „F1, F2 usw. als Standard-Funktionstasten“ unterschiedliche Events:
-/// normale Tastencodes (z. B. F6, Mond-Taste) oder Media-Keys (z. B. Zurück ◀◀).
+/// A key that triggers an action. Depending on the key and on the setting "Use F1, F2, etc.
+/// keys as standard function keys", the top row sends different events: regular key codes
+/// (e.g. F5, Dictation) or media keys (e.g. Previous ◀◀).
 enum KeyTrigger: Codable, Hashable {
-    /// Normales keyDown mit virtuellem Tastencode
+    /// Regular keyDown with a virtual key code
     case key(Int64)
-    /// Sondertaste (NSSystemDefined, Subtyp 8) mit NX_KEYTYPE_*-Code
+    /// Special key (NSSystemDefined, subtype 8) with an NX_KEYTYPE_* code
     case media(Int)
 
     var label: String {
         switch self {
         case .key(let code):
             if let name = Self.keyNames[code] { return name }
-            return "Taste \(code)"
+            return "Key \(code)"
         case .media(let code):
             if let name = Self.mediaNames[code] { return name }
-            return "Sondertaste \(code)"
+            return "Special key \(code)"
         }
     }
 
@@ -24,17 +24,17 @@ enum KeyTrigger: Codable, Hashable {
         122: "F1", 120: "F2", 99: "F3", 118: "F4", 96: "F5", 97: "F6",
         98: "F7", 100: "F8", 101: "F9", 109: "F10", 103: "F11", 111: "F12",
         105: "F13", 107: "F14", 113: "F15",
-        176: "Diktat 🎙", 177: "Spotlight 🔍", 178: "Nicht stören 🌙",
+        176: "Dictation 🎙", 177: "Spotlight 🔍", 178: "Do Not Disturb 🌙",
     ]
 
     private static let mediaNames: [Int: String] = [
-        0: "Lauter", 1: "Leiser", 2: "Bildschirm heller", 3: "Bildschirm dunkler",
-        7: "Ton aus", 16: "Wiedergabe ▶︎⏸", 17: "Weiter ▶▶", 18: "Zurück ◀◀",
-        19: "Vorspulen", 20: "Zurückspulen ◀◀", 21: "Tastatur heller", 22: "Tastatur dunkler",
+        0: "Volume Up", 1: "Volume Down", 2: "Display Brighter", 3: "Display Darker",
+        7: "Mute", 16: "Play/Pause ▶︎⏸", 17: "Next ▶▶", 18: "Previous ◀◀",
+        19: "Fast Forward", 20: "Rewind ◀◀", 21: "Keyboard Brighter", 22: "Keyboard Darker",
     ]
 
-    // Mond-Taste (F6) → dunkler, Zurück (F7) → heller – wie früher links dunkler, rechts heller.
-    // Die Varianten decken beide Einstellungen der Funktionstasten ab.
-    static let defaultDarker: [KeyTrigger] = [.key(178), .key(97)]
-    static let defaultBrighter: [KeyTrigger] = [.media(18), .media(20), .key(98)]
+    // F5 (Dictation) → darker, F6 (Do Not Disturb) → brighter – like the keyboard brightness
+    // keys on older MacBooks. The variants cover both settings of the function keys.
+    static let defaultDarker: [KeyTrigger] = [.key(176), .key(96)]
+    static let defaultBrighter: [KeyTrigger] = [.key(178), .key(97)]
 }

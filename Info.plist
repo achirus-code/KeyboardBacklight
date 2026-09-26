@@ -3,6 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleName</key><string>KeyboardBacklight</string>
+    <key>CFBundleDevelopmentRegion</key><string>en</string>
     <key>CFBundleDisplayName</key><string>KeyboardBacklight</string>
     <key>CFBundleIdentifier</key><string>de.achirus.keyboardbacklight</string>
     <key>CFBundleExecutable</key><string>KeyboardBacklight</string>
@@ -11,7 +12,7 @@
     <key>CFBundleShortVersionString</key><string>1.0</string>
     <key>CFBundleVersion</key><string>1</string>
     <key>LSMinimumSystemVersion</key><string>14.0</string>
-    <!-- Nur Menüleisten-Icon, kein Dock-Icon -->
+    <!-- Menu bar icon only, no Dock icon -->
     <key>LSUIElement</key><true/>
 </dict>
 </plist>

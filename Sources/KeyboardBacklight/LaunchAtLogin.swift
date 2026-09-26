@@ -1,7 +1,7 @@
 import Foundation
 import ServiceManagement
 
-/// Autostart beim Anmelden über SMAppService (macOS 13+).
+/// Launch at login via SMAppService (macOS 13+).
 enum LaunchAtLogin {
     static var isEnabled: Bool {
         SMAppService.mainApp.status == .enabled

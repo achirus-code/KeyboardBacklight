@@ -1,0 +1,94 @@
+# Builds KeyboardBacklight.app on a Mac runner for Apple silicon and Intel.
+# - Pull requests: test build, uploaded as a workflow artifact.
+# - Push to main: creates the release v<version> with KeyboardBacklight.zip, unless the
+#   version in Info.plist (CFBundleShortVersionString) already has a release.
+#   To ship a new version, bump that version and merge to main.
+name: Build & Release
+
+on:
+  pull_request:
+    paths:
+      - "Sources/**"
+      - "Resources/**"
+      - "Scripts/**"
+      - "Info.plist"
+      - "Package.swift"
+      - "build.sh"
+      - ".github/workflows/release.yml"
+  push:
+    branches: [main]
+    paths:
+      - "Sources/**"
+      - "Resources/**"
+      - "Scripts/**"
+      - "Info.plist"
+      - "Package.swift"
+      - "build.sh"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: macos-15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PUBLISH: ${{ github.event_name != 'pull_request' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read version
+        run: |
+          VERSION=$(plutil -extract CFBundleShortVersionString raw Info.plist)
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          if [[ "$PUBLISH" == true ]] && gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists – bump CFBundleShortVersionString to publish a new one."
+            echo "SKIP=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build app (Apple silicon and Intel)
+        if: env.SKIP != 'true'
+        run: |
+          plutil -replace CFBundleVersion -string "$GITHUB_RUN_NUMBER" Info.plist
+          UNIVERSAL=1 ./build.sh
+
+      - name: Verify and package
+        if: env.SKIP != 'true'
+        run: |
+          codesign --verify --deep --strict --verbose=2 KeyboardBacklight.app
+          lipo -info KeyboardBacklight.app/Contents/MacOS/KeyboardBacklight
+          ditto -c -k --keepParent KeyboardBacklight.app KeyboardBacklight.zip
+          shasum -a 256 KeyboardBacklight.zip
+
+      - name: Upload test build
+        if: env.SKIP != 'true' && env.PUBLISH != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyboardBacklight-${{ env.VERSION }}
+          path: KeyboardBacklight.zip
+
+      - name: Publish release
+        if: env.SKIP != 'true' && env.PUBLISH == 'true'
+        run: |
+          SHA=$(shasum -a 256 KeyboardBacklight.zip | cut -d' ' -f1)
+          cat > notes.md <<EOF
+          ## Installation
+
+          1. Download **KeyboardBacklight.zip**, unzip it and move the app to your Applications folder.
+          2. Open the app. It isn't notarized by Apple, so macOS blocks the first launch: close the message, then click **Open Anyway** in **System Settings › Privacy & Security**.
+          3. Allow **Accessibility** access – without it the keys can't be captured.
+
+          Requirements: macOS 14 or later, a Mac with a keyboard backlight. Built for Apple silicon and Intel.
+
+          SHA-256 of \`KeyboardBacklight.zip\`: \`$SHA\`
+          EOF
+          gh release create "v$VERSION" KeyboardBacklight.zip \
+            --target "$GITHUB_SHA" \
+            --title "KeyboardBacklight $VERSION" \
+            --notes-file notes.md

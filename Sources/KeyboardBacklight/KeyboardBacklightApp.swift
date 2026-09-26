@@ -4,8 +4,8 @@ import SwiftUI
 struct KeyboardBacklightApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
-    // Das Menüleisten-Icon verwaltet StatusItemController (AppKit): MenuBarExtra(isInserted:)
-    // hängt sich beim Ausblenden in einer Endlosschleife auf.
+    // The menu bar icon is managed by StatusItemController (AppKit): MenuBarExtra(isInserted:)
+    // hangs in an endless loop when it is hidden.
     var body: some Scene {
         Settings { EmptyView() }
     }
@@ -18,13 +18,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         MainActor.assumeIsolated {
             let controller = StatusItemController(state: AppState.shared)
             statusItem = controller
-            // Bei ausgeblendetem Icon: manueller Start zeigt die Einstellungen, Autostart nicht
+            // Icon hidden: a manual launch shows the settings, a launch at login doesn't
             if AppState.shared.hideIcon && !LaunchContext.launchedAtLogin() {
                 controller.reveal()
             }
         }
-        // Erneutes Öffnen (Finder, Spotlight, Launchpad) holt ein ausgeblendetes Icon zurück.
-        // SwiftUI reicht das Reopen-Event nicht weiter → direkt abfangen.
+        // Opening the app again (Finder, Spotlight, Launchpad) brings back a hidden icon.
+        // SwiftUI doesn't pass the reopen event on → handle it directly.
         NSAppleEventManager.shared().setEventHandler(
             self, andSelector: #selector(handleReopen(_:reply:)),
             forEventClass: AEEventClass(kCoreEventClass), andEventID: AEEventID(kAEReopenApplication))
