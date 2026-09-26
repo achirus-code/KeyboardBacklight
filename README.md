@@ -9,8 +9,6 @@ A macOS menu bar app that puts keyboard backlight control back on the keys – l
 - Keys can be reassigned, icon can be hidden, launch at login
 - In English, German, French, Spanish and Italian (follows the system language)
 
-[![Demo video: F6 makes the keyboard brighter, F5 darker](docs/img/video-poster.jpg)](https://achirus-code.github.io/KeyboardBacklight/#video)
-
 Tested on a MacBook Air M3 with macOS 26.
 
 ## Download
@@ -21,7 +19,7 @@ Tested on a MacBook Air M3 with macOS 26.
 2. The app isn't notarized by Apple, so macOS blocks the first launch: close the message, then click **Open Anyway** in *System Settings › Privacy & Security*.
 3. Allow **Accessibility** access – without it the keys can't be captured.
 
-Website: https://achirus-code.github.io/KeyboardBacklight/
+Website: https://achirus-code.github.io/KeyboardBacklight/en/ (English) · https://achirus-code.github.io/KeyboardBacklight/ (Deutsch)
 
 ## Building
 
@@ -44,7 +42,7 @@ On first launch macOS asks for **Accessibility** access – without it the keys 
 
 ## Website
 
-The project website lives in `docs/` – static HTML, CSS and JavaScript with no build step and no external dependencies. It includes an interactive preview of the app (keyboard, overlay, menu bar icon, settings).
+The project website lives in `docs/` – static HTML, CSS and JavaScript with no build step and no external dependencies. It includes an interactive preview of the app (keyboard, overlay, menu bar icon, settings). German at `docs/index.html`, English at `docs/en/index.html` – both share `style.css` and `app.js`, which picks its texts from `<html lang>`. Visitors without a German browser language are sent to the English page on their first visit; the DE | EN switch remembers the choice.
 
 ```bash
 python3 -m http.server -d docs   # view locally: http://localhost:8000
