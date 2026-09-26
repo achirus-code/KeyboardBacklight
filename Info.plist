@@ -4,6 +4,15 @@
 <dict>
     <key>CFBundleName</key><string>KeyboardBacklight</string>
     <key>CFBundleDevelopmentRegion</key><string>en</string>
+    <!-- UI languages (Resources/*.lproj) – macOS picks one based on the system language -->
+    <key>CFBundleLocalizations</key>
+    <array>
+        <string>en</string>
+        <string>de</string>
+        <string>fr</string>
+        <string>es</string>
+        <string>it</string>
+    </array>
     <key>CFBundleDisplayName</key><string>KeyboardBacklight</string>
     <key>CFBundleIdentifier</key><string>de.achirus.keyboardbacklight</string>
     <key>CFBundleExecutable</key><string>KeyboardBacklight</string>

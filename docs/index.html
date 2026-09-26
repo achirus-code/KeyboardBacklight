@@ -50,6 +50,7 @@
       <span>KeyboardBacklight</span>
     </a>
     <nav class="nav-links" aria-label="Abschnitte">
+      <a href="#video">Video</a>
       <a href="#demo">Ausprobieren</a>
       <a href="#funktionen">Funktionen</a>
       <a href="#download">Download</a>
@@ -81,7 +82,25 @@
         <a class="btn btn-primary" href="#download"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span>Download</span></a>
         <a class="btn btn-ghost" href="#demo">Ausprobieren</a>
       </div>
-      <p class="meta">macOS 14 oder neuer · Apple-Chip und Intel</p>
+      <p class="meta">macOS 14 oder neuer · Apple-Chip und Intel · Deutsch, English, Français, Español, Italiano</p>
+    </div>
+  </section>
+
+  <section id="video" class="section video-section">
+    <div class="wrap">
+      <header class="section-head">
+        <p class="eyebrow">In Aktion</p>
+        <h2>Ein Druck – und es leuchtet</h2>
+        <p>F6 macht die Tastatur heller, F5 dunkler. Einblendung und Menüleisten-Symbol zeigen dabei die Stufe.</p>
+      </header>
+      <figure class="video-frame">
+        <video id="demo-video" src="video/demo.mp4" poster="img/video-poster.jpg" width="1920" height="1080"
+               autoplay muted loop playsinline preload="metadata"
+               aria-label="Animation: F6 wird gedrückt und gehalten, die Tastaturbeleuchtung steigt bis 100 Prozent; danach senkt F5 sie wieder bis ganz aus. Einblendung und Menüleisten-Symbol zeigen die Stufe."></video>
+        <button class="video-toggle" id="video-toggle" type="button" aria-label="Video anhalten">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><path class="i-pause" d="M4.5 3h2.2v10H4.5zM9.3 3h2.2v10H9.3z"/><path class="i-play" d="M5 3.2v9.6L12.8 8z"/></svg>
+        </button>
+      </figure>
     </div>
   </section>
 
@@ -128,57 +147,57 @@
           <p class="popover-caption">Ein Klick aufs Menüleisten-Symbol öffnet:</p>
           <div class="popover" id="popover" aria-label="Einstellungen von KeyboardBacklight (Vorschau)" role="group">
             <div class="po-row po-head">
-              <strong>Keyboard Backlight</strong>
-              <label class="switch" title="Capture keys on/off">
-                <input type="checkbox" id="opt-enabled" role="switch" checked aria-label="Capture keys">
+              <strong>Tastaturbeleuchtung</strong>
+              <label class="switch" title="Tasten abfangen ein/aus">
+                <input type="checkbox" id="opt-enabled" role="switch" checked aria-label="Tasten abfangen">
                 <span class="switch-track"></span>
               </label>
             </div>
 
             <div class="po-row po-slider">
               <svg class="po-ic" aria-hidden="true"><use href="#i-light-min"/></svg>
-              <input type="range" id="opt-brightness" min="0" max="1" step="0.001" value="0.375" aria-label="Brightness">
+              <input type="range" id="opt-brightness" min="0" max="1" step="0.001" value="0.375" aria-label="Helligkeit">
               <svg class="po-ic" aria-hidden="true"><use href="#i-light-max"/></svg>
               <output id="opt-pct" for="opt-brightness">38 %</output>
             </div>
 
-            <label class="check" title="In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off.">
-              <input type="checkbox" id="opt-auto"><span class="box"></span>Adjust to ambient light
+            <label class="check" title="Bei hellem Licht schaltet macOS die Beleuchtung dann ganz aus. Ein Tastendruck schaltet die Automatik ab.">
+              <input type="checkbox" id="opt-auto"><span class="box"></span>An Umgebungslicht anpassen
             </label>
 
             <hr>
 
-            <strong class="po-sub">Keys</strong>
+            <strong class="po-sub">Tasten</strong>
             <div class="keyrow">
-              <span class="keyrow-title">Darker</span>
-              <span class="keyrow-label" id="label-darker">Dictation 🎙, F5</span>
-              <button type="button" class="mbtn mbtn-sm" data-learn="darker">Change</button>
+              <span class="keyrow-title">Dunkler</span>
+              <span class="keyrow-label" id="label-darker">Diktat 🎙, F5</span>
+              <button type="button" class="mbtn mbtn-sm" data-learn="darker">Ändern</button>
             </div>
             <div class="keyrow">
-              <span class="keyrow-title">Brighter</span>
-              <span class="keyrow-label" id="label-brighter">Do Not Disturb 🌙, F6</span>
-              <button type="button" class="mbtn mbtn-sm" data-learn="brighter">Change</button>
+              <span class="keyrow-title">Heller</span>
+              <span class="keyrow-label" id="label-brighter">Nicht stören 🌙, F6</span>
+              <button type="button" class="mbtn mbtn-sm" data-learn="brighter">Ändern</button>
             </div>
             <div class="po-buttons">
-              <button type="button" class="mbtn mbtn-sm" id="btn-swap">Swap</button>
-              <button type="button" class="mbtn mbtn-sm" id="btn-reset">Default</button>
+              <button type="button" class="mbtn mbtn-sm" id="btn-swap">Tauschen</button>
+              <button type="button" class="mbtn mbtn-sm" id="btn-reset">Standard</button>
             </div>
-            <p class="po-caption">Hold ⌥⇧ for finer steps</p>
+            <p class="po-caption">⌥⇧ gedrückt halten für feinere Schritte</p>
 
             <hr>
 
-            <label class="check"><input type="checkbox" id="opt-hud" checked><span class="box"></span>Show overlay when changing</label>
+            <label class="check"><input type="checkbox" id="opt-hud" checked><span class="box"></span>Anzeige beim Ändern einblenden</label>
             <div>
-              <label class="check"><input type="checkbox" id="opt-hide"><span class="box"></span>Hide menu bar icon</label>
-              <p class="po-caption po-indent">To bring it back, open the app again (Finder, Spotlight).</p>
+              <label class="check"><input type="checkbox" id="opt-hide"><span class="box"></span>Menüleisten-Icon ausblenden</label>
+              <p class="po-caption po-indent">Zurückholen: App erneut öffnen (Finder, Spotlight).</p>
             </div>
-            <label class="check"><input type="checkbox" id="opt-login"><span class="box"></span>Launch at login</label>
+            <label class="check"><input type="checkbox" id="opt-login"><span class="box"></span>Beim Anmelden starten</label>
 
             <hr>
 
             <div class="po-buttons po-footer">
-              <button type="button" class="mbtn" id="btn-quit">Quit</button>
-              <button type="button" class="mbtn mbtn-default" id="btn-close">Close</button>
+              <button type="button" class="mbtn" id="btn-quit">Beenden</button>
+              <button type="button" class="mbtn mbtn-default" id="btn-close">Schließen</button>
             </div>
           </div>
         </aside>
@@ -246,7 +265,7 @@
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 9.5h8l-2.2-2.2M16 14.5H8l2.2 2.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
           <h3>Frei belegbar</h3>
-          <p>Auf „Change“ klicken, Taste drücken, fertig. „Swap“ tauscht die beiden Tasten, „Default“ stellt F5 und F6 wieder her. Klappt mit und ohne „F1, F2 usw. als Standard-Funktionstasten“.</p>
+          <p>Auf „Ändern“ klicken, Taste drücken, fertig. „Tauschen“ tauscht die beiden Tasten, „Standard“ stellt F5 und F6 wieder her. Klappt mit und ohne „F1, F2 usw. als Standard-Funktionstasten“.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.5 3v5.6c0 4.6-3.1 8.2-7.5 9.8-4.4-1.6-7.5-5.2-7.5-9.8V5.8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.6 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -288,7 +307,7 @@
         <img src="img/icon-256.png" alt="" width="84" height="84">
         <div class="download-text">
           <h3>KeyboardBacklight für macOS</h3>
-          <p>Neueste Version · macOS 14 oder neuer · Apple-Chip und Intel</p>
+          <p>Neueste Version · macOS 14 oder neuer · Apple-Chip und Intel · in fünf Sprachen</p>
         </div>
         <div class="download-actions">
           <a class="btn btn-primary" href="https://github.com/achirus-code/KeyboardBacklight/releases/latest/download/KeyboardBacklight.zip"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span>Download (ZIP)</span></a>

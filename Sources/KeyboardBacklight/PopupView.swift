@@ -91,13 +91,13 @@ struct PopupView: View {
             }
         }
         .padding(14)
-        .frame(width: 300)
+        .frame(width: 330)
 
     }
 
-    private func keyRow(_ title: String, action: AppState.Action) -> some View {
+    private func keyRow(_ title: LocalizedStringKey, action: AppState.Action) -> some View {
         HStack(alignment: .firstTextBaseline) {
-            Text(title).frame(width: 60, alignment: .leading)
+            Text(title).frame(width: 90, alignment: .leading)
             if state.learning == action {
                 Text("Press a key … (Esc)")
                     .foregroundStyle(.tint)
@@ -107,7 +107,7 @@ struct PopupView: View {
                     .lineLimit(2)
             }
             Spacer()
-            Button(state.learning == action ? "Cancel" : "Change") { state.startLearning(action) }
+            Button(state.learning == action ? LocalizedStringKey("Cancel") : LocalizedStringKey("Change")) { state.startLearning(action) }
                 .controlSize(.small)
                 .disabled(!state.hasAccessibility)
         }

@@ -1,0 +1,43 @@
+/* KeyboardBacklight – de */
+
+"Keyboard Backlight" = "Tastaturbeleuchtung";
+"Capture keys on/off" = "Tasten abfangen ein/aus";
+"No keyboard backlight found" = "Keine Tastaturbeleuchtung gefunden";
+"Adjust to ambient light" = "An Umgebungslicht anpassen";
+"In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off." = "Bei hellem Licht schaltet macOS die Beleuchtung dann ganz aus. Ein Tastendruck schaltet die Automatik ab.";
+"Keys" = "Tasten";
+"Darker" = "Dunkler";
+"Brighter" = "Heller";
+"Swap" = "Tauschen";
+"Default" = "Standard";
+"Hold ⌥⇧ for finer steps" = "⌥⇧ gedrückt halten für feinere Schritte";
+"Show overlay when changing" = "Anzeige beim Ändern einblenden";
+"Hide menu bar icon" = "Menüleisten-Icon ausblenden";
+"To bring it back, open the app again (Finder, Spotlight)." = "Zurückholen: App erneut öffnen (Finder, Spotlight).";
+"Launch at login" = "Beim Anmelden starten";
+"Quit" = "Beenden";
+"Close" = "Schließen";
+"Press a key … (Esc)" = "Taste drücken … (Esc)";
+"Cancel" = "Abbrechen";
+"Change" = "Ändern";
+"Accessibility access missing" = "Bedienungshilfen-Zugriff fehlt";
+"Without it, KeyboardBacklight can't capture the brightness keys." = "Ohne ihn kann KeyboardBacklight die Helligkeitstasten nicht abfangen.";
+"Open System Settings" = "Systemeinstellungen öffnen";
+"Key %lld" = "Taste %lld";
+"Special key %lld" = "Sondertaste %lld";
+
+/* Key names */
+"Dictation 🎙" = "Diktat 🎙";
+"Do Not Disturb 🌙" = "Nicht stören 🌙";
+"Volume Up" = "Lauter";
+"Volume Down" = "Leiser";
+"Display Brighter" = "Bildschirm heller";
+"Display Darker" = "Bildschirm dunkler";
+"Mute" = "Ton aus";
+"Play/Pause ▶︎⏸" = "Wiedergabe/Pause ▶︎⏸";
+"Next ▶▶" = "Weiter ▶▶";
+"Previous ◀◀" = "Zurück ◀◀";
+"Fast Forward" = "Vorspulen";
+"Rewind ◀◀" = "Zurückspulen ◀◀";
+"Keyboard Brighter" = "Tastatur heller";
+"Keyboard Darker" = "Tastatur dunkler";

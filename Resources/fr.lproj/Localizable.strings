@@ -1,0 +1,43 @@
+/* KeyboardBacklight – fr */
+
+"Keyboard Backlight" = "Rétroéclairage du clavier";
+"Capture keys on/off" = "Intercepter les touches";
+"No keyboard backlight found" = "Aucun rétroéclairage de clavier trouvé";
+"Adjust to ambient light" = "Ajuster selon la lumière ambiante";
+"In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off." = "En pleine lumière, macOS éteint alors complètement le rétroéclairage. Appuyer sur une touche désactive le réglage automatique.";
+"Keys" = "Touches";
+"Darker" = "Plus sombre";
+"Brighter" = "Plus clair";
+"Swap" = "Inverser";
+"Default" = "Par défaut";
+"Hold ⌥⇧ for finer steps" = "Maintenez ⌥⇧ pour des paliers plus fins";
+"Show overlay when changing" = "Afficher l’indicateur lors du réglage";
+"Hide menu bar icon" = "Masquer l’icône de la barre des menus";
+"To bring it back, open the app again (Finder, Spotlight)." = "Pour la réafficher, rouvrez l’app (Finder, Spotlight).";
+"Launch at login" = "Ouvrir à la connexion";
+"Quit" = "Quitter";
+"Close" = "Fermer";
+"Press a key … (Esc)" = "Appuyez sur une touche … (Échap)";
+"Cancel" = "Annuler";
+"Change" = "Modifier";
+"Accessibility access missing" = "Accès d’accessibilité manquant";
+"Without it, KeyboardBacklight can't capture the brightness keys." = "Sans cet accès, KeyboardBacklight ne peut pas intercepter les touches de luminosité.";
+"Open System Settings" = "Ouvrir les Réglages Système";
+"Key %lld" = "Touche %lld";
+"Special key %lld" = "Touche spéciale %lld";
+
+/* Key names */
+"Dictation 🎙" = "Dictée 🎙";
+"Do Not Disturb 🌙" = "Ne pas déranger 🌙";
+"Volume Up" = "Volume +";
+"Volume Down" = "Volume −";
+"Display Brighter" = "Écran plus lumineux";
+"Display Darker" = "Écran plus sombre";
+"Mute" = "Silence";
+"Play/Pause ▶︎⏸" = "Lecture/Pause ▶︎⏸";
+"Next ▶▶" = "Suivant ▶▶";
+"Previous ◀◀" = "Précédent ◀◀";
+"Fast Forward" = "Avance rapide";
+"Rewind ◀◀" = "Retour rapide ◀◀";
+"Keyboard Brighter" = "Clavier plus lumineux";
+"Keyboard Darker" = "Clavier plus sombre";
