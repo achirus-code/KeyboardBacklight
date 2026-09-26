@@ -10,6 +10,12 @@ Menüleisten-App für macOS, die die Tastaturbeleuchtung wieder per Taste steuer
 
 Getestet auf MacBook Air M3 mit macOS 26.
 
+## Download
+
+**[KeyboardBacklight.zip](https://github.com/achirus-code/KeyboardBacklight/releases/latest/download/KeyboardBacklight.zip)** – neueste Version für Apple-Chip und Intel. Entpacken, in „Programme“ ziehen und beim ersten Start unter *Systemeinstellungen › Datenschutz & Sicherheit* auf „Dennoch öffnen“ klicken (die App ist nicht notarisiert).
+
+Website: https://achirus-code.github.io/KeyboardBacklight/
+
 ## Bauen
 
 Benötigt nur die Xcode Command Line Tools.
@@ -17,6 +23,7 @@ Benötigt nur die Xcode Command Line Tools.
 ```bash
 ./build.sh           # baut KeyboardBacklight.app im Projektordner
 ./build.sh install   # zusätzlich nach /Applications installieren und starten
+UNIVERSAL=1 ./build.sh   # für Apple-Chip und Intel (benötigt Xcode)
 ```
 
 Beim ersten Start fragt macOS nach dem **Bedienungshilfen-Zugriff** – ohne ihn können die Tasten nicht abgefangen werden.
@@ -37,3 +44,11 @@ python3 -m http.server -d docs   # lokal ansehen: http://localhost:8000
 ```
 
 Veröffentlicht wird sie per GitHub Actions (`.github/workflows/pages.yml`) bei jeder Änderung in `docs/` auf `main`. Einmalig nötig: *Settings → Pages → Source: GitHub Actions*.
+
+## Release
+
+Ein Versions-Tag startet `.github/workflows/release.yml`: Der Workflow baut die App auf einem Mac-Runner für Apple-Chip und Intel, übernimmt die Version aus dem Tag und veröffentlicht `KeyboardBacklight.zip` als Release.
+
+```bash
+git tag v1.1 && git push origin v1.1
+```

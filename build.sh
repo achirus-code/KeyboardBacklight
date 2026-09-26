@@ -3,13 +3,17 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-swift build -c release
+# UNIVERSAL=1 baut für Apple-Chip und Intel (benötigt Xcode, nicht nur die Command Line Tools)
+ARGS=(-c release)
+[[ "${UNIVERSAL:-}" == 1 ]] && ARGS+=(--arch arm64 --arch x86_64)
+swift build "${ARGS[@]}"
+BIN="$(swift build "${ARGS[@]}" --show-bin-path)"
 [[ -f Resources/AppIcon.icns ]] || swift Scripts/make-icon.swift
 
 APP=KeyboardBacklight.app
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
-cp .build/release/KeyboardBacklight "$APP/Contents/MacOS/KeyboardBacklight"
+cp "$BIN/KeyboardBacklight" "$APP/Contents/MacOS/KeyboardBacklight"
 cp Info.plist "$APP/Contents/Info.plist"
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 # Ad-hoc-Signatur mit fester Anforderung (nur Bundle-ID): So bleibt der

@@ -406,27 +406,6 @@
   tick();
   setInterval(tick, 15000);
 
-  // ——— Befehle kopieren ———
-  $$('.copy').forEach(btn => btn.addEventListener('click', async () => {
-    const text = btn.parentElement.querySelector('code').textContent;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const range = document.createRange();
-      range.selectNodeContents(btn.parentElement.querySelector('code'));
-      getSelection().removeAllRanges();
-      getSelection().addRange(range);
-      return;
-    }
-    const use = btn.querySelector('use');
-    btn.classList.add('is-done');
-    use.setAttribute('href', '#i-check');
-    setTimeout(() => {
-      btn.classList.remove('is-done');
-      use.setAttribute('href', '#i-copy');
-    }, 1600);
-  }));
-
   // ——— Sanftes Einblenden beim Scrollen ———
   if (!reduceMotion && 'IntersectionObserver' in window) {
     const targets = $$('.section-head, .card, .spec > div, .faq details');

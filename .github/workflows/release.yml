@@ -1,0 +1,51 @@
+# Baut KeyboardBacklight.app auf einem Mac-Runner und veröffentlicht sie als Release.
+# Auslösen mit einem Versions-Tag: git tag v1.1 && git push origin v1.1
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Version aus dem Tag übernehmen
+        run: |
+          plutil -replace CFBundleShortVersionString -string "${GITHUB_REF_NAME#v}" Info.plist
+          plutil -replace CFBundleVersion -string "$GITHUB_RUN_NUMBER" Info.plist
+
+      - name: App bauen (Apple-Chip und Intel)
+        run: UNIVERSAL=1 ./build.sh
+
+      - name: Prüfen und verpacken
+        run: |
+          codesign --verify --deep --strict --verbose=2 KeyboardBacklight.app
+          lipo -info KeyboardBacklight.app/Contents/MacOS/KeyboardBacklight
+          ditto -c -k --keepParent KeyboardBacklight.app KeyboardBacklight.zip
+          shasum -a 256 KeyboardBacklight.zip
+
+      - name: Release veröffentlichen
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          SHA=$(shasum -a 256 KeyboardBacklight.zip | cut -d' ' -f1)
+          cat > notes.md <<EOF
+          ## Installation
+
+          1. **KeyboardBacklight.zip** laden, per Doppelklick entpacken und die App in den Ordner „Programme“ ziehen.
+          2. App öffnen. Sie ist nicht bei Apple notarisiert, deshalb blockiert macOS den ersten Start: Meldung schließen und unter **Systemeinstellungen › Datenschutz & Sicherheit** auf **Dennoch öffnen** klicken.
+          3. Den **Bedienungshilfen-Zugriff** erlauben – ohne ihn lassen sich die Tasten nicht abfangen.
+
+          Voraussetzungen: macOS 14 oder neuer, Mac mit Tastaturbeleuchtung. Gebaut für Apple-Chip und Intel.
+
+          SHA-256 von \`KeyboardBacklight.zip\`: \`$SHA\`
+          EOF
+          gh release create "$GITHUB_REF_NAME" KeyboardBacklight.zip \
+            --title "KeyboardBacklight ${GITHUB_REF_NAME#v}" \
+            --notes-file notes.md
