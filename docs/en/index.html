@@ -57,7 +57,6 @@
       <a href="#demo">Try it</a>
       <a href="#funktionen">Features</a>
       <a href="#download">Download</a>
-      <a href="#technik">Tech</a>
       <a href="#faq">FAQ</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Language">
@@ -329,25 +328,6 @@
           </div>
         </li>
       </ol>
-    </div>
-  </section>
-
-  <section id="technik" class="section">
-    <div class="wrap tech">
-      <header class="section-head section-head-left">
-        <p class="eyebrow">Tech</p>
-        <h2>Under the hood</h2>
-        <p>A native Swift app made with SwiftUI and AppKit, built as a Swift package. It talks to the same interface macOS itself uses.</p>
-        <a class="btn btn-ghost" href="https://github.com/achirus-code/KeyboardBacklight"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>View source code</span></a>
-      </header>
-      <dl class="spec">
-        <div><dt>Brightness</dt><dd>Private framework <code>CoreBrightness</code> with <code>KeyboardBrightnessClient</code>. The built-in keyboard takes priority.</dd></div>
-        <div><dt>Keys</dt><dd>A <code>CGEventTap</code> captures only the assigned keys: F5 = key code 176 (Dictation), F6 = 178 (Do Not Disturb); with standard function keys, codes 96 and 97.</dd></div>
-        <div><dt>Auto brightness</dt><dd>In bright ambient light, automatic brightness keeps the backlight off. It is turned off on the first key press and can be turned back on in the menu.</dd></div>
-        <div><dt>Launch at login</dt><dd>Via <code>SMAppService</code>. At login the app starts quietly; when the icon is hidden, a manual launch shows the settings.</dd></div>
-        <div><dt>Signing</dt><dd>Ad hoc with a fixed requirement (bundle ID only) – so Accessibility access survives updates.</dd></div>
-        <div><dt>Releases</dt><dd>GitHub Actions builds every version directly from this repository's source code, for Apple silicon and Intel.</dd></div>
-      </dl>
     </div>
   </section>
 

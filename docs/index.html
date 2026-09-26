@@ -65,7 +65,6 @@
       <a href="#demo">Ausprobieren</a>
       <a href="#funktionen">Funktionen</a>
       <a href="#download">Download</a>
-      <a href="#technik">Technik</a>
       <a href="#faq">Fragen</a>
     </nav>
     <div class="lang-switch" role="group" aria-label="Sprache">
@@ -337,25 +336,6 @@
           </div>
         </li>
       </ol>
-    </div>
-  </section>
-
-  <section id="technik" class="section">
-    <div class="wrap tech">
-      <header class="section-head section-head-left">
-        <p class="eyebrow">Technik</p>
-        <h2>Unter der Haube</h2>
-        <p>Eine native Swift-App aus SwiftUI und AppKit, gebaut als Swift Package. Sie spricht dieselbe Schnittstelle an wie macOS selbst.</p>
-        <a class="btn btn-ghost" href="https://github.com/achirus-code/KeyboardBacklight"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>Quellcode ansehen</span></a>
-      </header>
-      <dl class="spec">
-        <div><dt>Helligkeit</dt><dd>Privates Framework <code>CoreBrightness</code> mit <code>KeyboardBrightnessClient</code>. Die eingebaute Tastatur hat Vorrang.</dd></div>
-        <div><dt>Tasten</dt><dd>Ein <code>CGEventTap</code> fängt nur die belegten Tasten ab: F5 = Tastencode 176 (Diktat), F6 = 178 (Nicht stören); mit Standard-Funktionstasten die Codes 96 und 97.</dd></div>
-        <div><dt>Automatik</dt><dd>Bei hellem Umgebungslicht hält die Helligkeitsautomatik die Beleuchtung aus. Sie wird beim ersten Tastendruck abgeschaltet und ist im Menü wieder aktivierbar.</dd></div>
-        <div><dt>Autostart</dt><dd>Über <code>SMAppService</code>. Beim Anmelden startet die App still, ein manueller Start zeigt bei ausgeblendetem Icon die Einstellungen.</dd></div>
-        <div><dt>Signatur</dt><dd>Ad hoc mit fester Anforderung (nur die Bundle-ID) – so bleibt der Bedienungshilfen-Zugriff auch nach einem Update erhalten.</dd></div>
-        <div><dt>Releases</dt><dd>Jede Version baut GitHub Actions direkt aus dem Quellcode dieses Repositorys, für Apple-Chip und Intel.</dd></div>
-      </dl>
     </div>
   </section>
 

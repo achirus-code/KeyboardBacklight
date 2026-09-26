@@ -470,7 +470,7 @@
 
   // ——— Sanftes Einblenden beim Scrollen ———
   if (!reduceMotion && 'IntersectionObserver' in window) {
-    const targets = $$('.section-head, .card, .spec > div, .faq details');
+    const targets = $$('.section-head, .card, .faq details');
     const io = new IntersectionObserver(entries => entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       entry.target.classList.add('is-in');

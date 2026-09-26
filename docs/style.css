@@ -537,20 +537,6 @@ p { margin: 0; }
 .path { color: var(--text) !important; font-size: 15px !important; font-weight: 550; }
 @media (max-width: 560px) { .step { flex-direction: column; gap: 14px; padding: 22px; } }
 
-/* Technik */
-.tech { display: grid; grid-template-columns: 1fr 1.35fr; gap: 56px; align-items: start; }
-.tech .section-head { position: sticky; top: 100px; }
-.tech .section-head .btn { margin-top: 26px; }
-.spec { margin: 0; display: flex; flex-direction: column; border-top: 1px solid var(--border); }
-.spec > div { display: grid; grid-template-columns: 120px 1fr; gap: 18px; padding: 20px 0; border-bottom: 1px solid var(--border); }
-.spec dt { color: var(--amber); font-weight: 650; }
-.spec dd { margin: 0; color: var(--muted); }
-@media (max-width: 860px) {
-  .tech { grid-template-columns: 1fr; gap: 32px; }
-  .tech .section-head { position: static; }
-  .spec > div { grid-template-columns: 1fr; gap: 4px; }
-}
-
 /* FAQ */
 .faq { display: flex; flex-direction: column; gap: 10px; }
 .faq details { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
