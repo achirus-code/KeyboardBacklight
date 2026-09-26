@@ -7,6 +7,59 @@
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ——— Texte: Die Seite gibt es auf Deutsch (/) und Englisch (/en/), <html lang> wählt die Sprache ———
+  const LANG = document.documentElement.lang === 'en' ? 'en' : 'de';
+  const TEXT = {
+    de: {
+      fn: ['Bildschirm dunkler', 'Bildschirm heller', 'Mission Control', 'Spotlight 🔍', 'Diktat 🎙', 'Nicht stören 🌙',
+        'Zurück ◀◀', 'Wiedergabe/Pause ▶︎⏸', 'Weiter ▶▶', 'Ton aus', 'Leiser', 'Lauter'],
+      key: name => `Taste ${name}`,
+      darker: 'Dunkler', brighter: 'Heller',
+      tagDarker: '− dunkler', tagBrighter: '+ heller',
+      fineStep: 'feiner Schritt',
+      captureOff: 'Das Abfangen ist ausgeschaltet – macOS bekommt die Taste.',
+      notBound: name => `<b>${name}</b> ist nicht belegt – die Taste geht wie gewohnt an macOS.`,
+      assigned: (action, label) => `<b>${action}</b> liegt jetzt auf ${label}.`,
+      cancelled: 'Abgebrochen.',
+      captureOnAgain: 'Tasten werden wieder abgefangen.',
+      captureOffNow: 'Abfangen aus – die Tasten gehen wieder an macOS.',
+      brightness: pct => `Helligkeit ${pct} %`,
+      autoOn: 'Automatik an – der nächste Tastendruck schaltet sie wieder ab.',
+      autoOff: 'Automatik aus.',
+      iconHidden: 'Icon ausgeblendet – die Tasten funktionieren weiter. Zurückholen: App erneut öffnen.',
+      iconShown: 'Icon wieder in der Menüleiste.',
+      learn: 'Jetzt eine Taste drücken – auf der Tastatur oben oder auf deiner eigenen. <b>esc</b> bricht ab.',
+      swapped: 'Tasten getauscht.',
+      reset: 'Standardbelegung: F5 dunkler, F6 heller.',
+      quit: 'In der App beendet <b>Beenden</b> (⌘Q) KeyboardBacklight. Ein Klick neben das Fenster schließt es.',
+      pressKey: 'Taste drücken … (Esc)', cancel: 'Abbrechen', change: 'Ändern',
+    },
+    en: {
+      fn: ['Display Darker', 'Display Brighter', 'Mission Control', 'Spotlight 🔍', 'Dictation 🎙', 'Do Not Disturb 🌙',
+        'Previous ◀◀', 'Play/Pause ▶︎⏸', 'Next ▶▶', 'Mute', 'Volume Down', 'Volume Up'],
+      key: name => `Key ${name}`,
+      darker: 'Darker', brighter: 'Brighter',
+      tagDarker: '− darker', tagBrighter: '+ brighter',
+      fineStep: 'fine step',
+      captureOff: 'Capturing is off – macOS gets the key.',
+      notBound: name => `<b>${name}</b> isn't assigned – the key goes to macOS as usual.`,
+      assigned: (action, label) => `<b>${action}</b> is now on ${label}.`,
+      cancelled: 'Cancelled.',
+      captureOnAgain: 'Keys are captured again.',
+      captureOffNow: 'Capturing off – the keys go to macOS again.',
+      brightness: pct => `Brightness ${pct} %`,
+      autoOn: 'Automatic adjustment on – the next key press turns it off again.',
+      autoOff: 'Automatic adjustment off.',
+      iconHidden: 'Icon hidden – the keys keep working. To bring it back, open the app again.',
+      iconShown: 'Icon is back in the menu bar.',
+      learn: 'Now press a key – on the keyboard above or on your own. <b>esc</b> cancels.',
+      swapped: 'Keys swapped.',
+      reset: 'Default: F5 darker, F6 brighter.',
+      quit: 'In the app, <b>Quit</b> (⌘Q) quits KeyboardBacklight. Clicking outside the window closes it.',
+      pressKey: 'Press a key … (Esc)', cancel: 'Cancel', change: 'Change',
+    },
+  }[LANG];
+
   // ——— Menüleisten-Symbol wie MenuBarIcon.swift: Balken mit fünf Punkten im Halbkreis ———
   function menuBarIconSVG(level) {
     const lit = level <= 0 ? 0 : Math.max(1, Math.ceil(level * 5));
@@ -23,23 +76,12 @@
   }
   $$('[data-menubar-icon]').forEach(el => { el.innerHTML = menuBarIconSVG(Number(el.dataset.menubarIcon)); });
 
-  // ——— Tastatur (MacBook, deutsches Layout) ———
-  const FN = [
-    ['f1', 'i-sun-sm', 'Bildschirm dunkler'],
-    ['f2', 'i-sun-lg', 'Bildschirm heller'],
-    ['f3', 'i-mission', 'Mission Control'],
-    ['f4', 'i-search', 'Spotlight 🔍'],
-    ['f5', 'i-mic', 'Diktat 🎙'],
-    ['f6', 'i-moon', 'Nicht stören 🌙'],
-    ['f7', 'i-rewind', 'Zurück ◀◀'],
-    ['f8', 'i-playpause', 'Wiedergabe/Pause ▶︎⏸'],
-    ['f9', 'i-forward', 'Weiter ▶▶'],
-    ['f10', 'i-speaker', 'Ton aus'],
-    ['f11', 'i-vol-down', 'Leiser'],
-    ['f12', 'i-vol-up', 'Lauter'],
-  ];
+  // ——— Tastatur (MacBook, deutsches bzw. US-Layout je nach Seitensprache) ———
+  const FN = ['i-sun-sm', 'i-sun-lg', 'i-mission', 'i-search', 'i-mic', 'i-moon',
+    'i-rewind', 'i-playpause', 'i-forward', 'i-speaker', 'i-vol-down', 'i-vol-up']
+    .map((icon, i) => [`f${i + 1}`, icon, TEXT.fn[i]]);
   // Physische Position → KeyboardEvent.code (deutsches Layout auf US-Codes)
-  const LETTER_CODES = { Z: 'KeyY', Ü: 'BracketLeft', Ö: 'Semicolon', Ä: 'Quote' };
+  const LETTER_CODES = LANG === 'de' ? { Z: 'KeyY', Ü: 'BracketLeft', Ö: 'Semicolon', Ä: 'Quote' } : {};
 
   const legend = (text, cls = '') => `<span class="lg ${cls}">${text}</span>`;
   const twoLevel = (top, bottom) => `<span class="lg lg2"><span>${top}</span><span>${bottom}</span></span>`;
@@ -55,21 +97,31 @@
       { id: 'touchid', cls: 'touchid', html: '', name: 'Touch ID' },
     ],
     [
-      ...[['°', '^', 'Backquote'], ['!', '1'], ['"', '2'], ['§', '3'], ['$', '4'], ['%', '5'], ['&amp;', '6'],
-        ['/', '7'], ['(', '8'], [')', '9'], ['=', '0'], ['?', 'ß', 'Minus'], ['`', '´', 'Equal']]
+      ...(LANG === 'de'
+        ? [['°', '^', 'Backquote'], ['!', '1'], ['"', '2'], ['§', '3'], ['$', '4'], ['%', '5'], ['&amp;', '6'],
+          ['/', '7'], ['(', '8'], [')', '9'], ['=', '0'], ['?', 'ß', 'Minus'], ['`', '´', 'Equal']]
+        : [['~', '`', 'Backquote'], ['!', '1'], ['@', '2'], ['#', '3'], ['$', '4'], ['%', '5'], ['^', '6'],
+          ['&amp;', '7'], ['*', '8'], ['(', '9'], [')', '0'], ['_', '-', 'Minus'], ['+', '=', 'Equal']])
         .map(([top, bottom, code]) => ({ id: 'n' + bottom, code: code || 'Digit' + bottom, html: twoLevel(top, bottom), name: bottom })),
       { id: 'bksp', w: 1.5, code: 'Backspace', html: legend('⌫', 'lg-r'), name: '⌫' },
     ],
     [
       { id: 'tab', w: 1.5, code: 'Tab', html: legend('⇥', 'lg-l'), name: '⇥' },
-      ...[...'QWERTZUIOPÜ'].map(letter),
-      { id: 'plus', code: 'BracketRight', html: twoLevel('*', '+'), name: '+' },
+      ...(LANG === 'de'
+        ? [...[...'QWERTZUIOPÜ'].map(letter), { id: 'plus', code: 'BracketRight', html: twoLevel('*', '+'), name: '+' }]
+        : [...[...'QWERTYUIOP'].map(letter),
+          { id: 'lbr', code: 'BracketLeft', html: twoLevel('{', '['), name: '[' },
+          { id: 'rbr', code: 'BracketRight', html: twoLevel('}', ']'), name: ']' }]),
       { id: 'enter', cls: 'enter-top', code: 'Enter', html: legend('↩', 'lg-r'), name: '↩' },
     ],
     [
       { id: 'caps', w: 1.75, code: 'CapsLock', html: legend('⇪', 'lg-l'), name: '⇪' },
-      ...[...'ASDFGHJKLÖÄ'].map(letter),
-      { id: 'hash', code: 'Backslash', html: twoLevel("'", '#'), name: '#' },
+      ...(LANG === 'de'
+        ? [...[...'ASDFGHJKLÖÄ'].map(letter), { id: 'hash', code: 'Backslash', html: twoLevel("'", '#'), name: '#' }]
+        : [...[...'ASDFGHJKL'].map(letter),
+          { id: 'semi', code: 'Semicolon', html: twoLevel(':', ';'), name: ';' },
+          { id: 'quote', code: 'Quote', html: twoLevel('"', "'"), name: "'" },
+          { id: 'bsl', code: 'Backslash', html: twoLevel('|', '\\'), name: '\\' }]),
       { id: 'enter', w: 0.75, cls: 'enter-bottom', html: '', name: '↩' },
     ],
   ];
@@ -96,7 +148,7 @@
       b.innerHTML = k.html + '<span class="tag"></span>';
       b.tabIndex = -1;
       if (k.id === 'touchid' || k.cls === 'enter-bottom') b.setAttribute('aria-hidden', 'true');
-      else b.setAttribute('aria-label', k.fnLabel ? `${k.fnLabel} – ${k.name}` : `Taste ${k.name}`);
+      else b.setAttribute('aria-label', k.fnLabel ? `${k.fnLabel} – ${k.name}` : TEXT.key(k.name));
       rowEl.append(b);
     });
     kbInner.append(rowEl);
@@ -106,8 +158,8 @@
 
   // ——— Zustand ———
   const DEFAULTS = {
-    darker: [{ id: 'f5', label: 'Diktat 🎙' }, { id: 'f5', label: 'F5' }],
-    brighter: [{ id: 'f6', label: 'Nicht stören 🌙' }, { id: 'f6', label: 'F6' }],
+    darker: [{ id: 'f5', label: TEXT.fn[4] }, { id: 'f5', label: 'F5' }],
+    brighter: [{ id: 'f6', label: TEXT.fn[5] }, { id: 'f6', label: 'F6' }],
   };
   const state = {
     brightness: 6 / 16,
@@ -146,7 +198,7 @@
 
   const actionFor = id =>
     state.darker.some(t => t.id === id) ? 'darker' : state.brighter.some(t => t.id === id) ? 'brighter' : null;
-  const nameOf = id => KEYS[id].fnLabel || `Taste ${KEYS[id].name}`;
+  const nameOf = id => KEYS[id].fnLabel || TEXT.key(KEYS[id].name);
   const labelFor = action => (state[action].length ? state[action].map(t => t.label).join(', ') : '–');
   const status = html => { el.status.innerHTML = html; };
 
@@ -165,13 +217,13 @@
     const next = Math.round(state.brightness * n) + (action === 'brighter' ? 1 : -1);
     setBrightness(next / n, true);
     const pct = Math.round(state.brightness * 100);
-    status(`<b>${action === 'brighter' ? 'Heller' : 'Dunkler'}</b> · ${pct} %${fine ? ' · feiner Schritt' : ''}`);
+    status(`<b>${action === 'brighter' ? TEXT.brighter : TEXT.darker}</b> · ${pct} %${fine ? ` · ${TEXT.fineStep}` : ''}`);
   }
 
   function perform(action, fine, isRepeat) {
     kb.classList.remove('hint');
     if (!state.enabled) {
-      status('Das Abfangen ist ausgeschaltet – macOS bekommt die Taste.');
+      status(TEXT.captureOff);
       return;
     }
     // Gedrückt halten: auf ein angenehmes Tempo bremsen
@@ -206,25 +258,25 @@
     if (action) {
       perform(action, fine, isRepeat);
     } else if (!isRepeat) {
-      status(`<b>${nameOf(id)}</b> ist nicht belegt – die Taste geht wie gewohnt an macOS.`);
+      status(TEXT.notBound(nameOf(id)));
     }
   }
 
   function assign(id) {
     const action = state.learning;
-    const trigger = { id, label: KEYS[id].fnLabel ? KEYS[id].name : `Taste ${KEYS[id].name}` };
+    const trigger = { id, label: KEYS[id].fnLabel ? KEYS[id].name : TEXT.key(KEYS[id].name) };
     state.darker = state.darker.filter(t => t.id !== id);
     state.brighter = state.brighter.filter(t => t.id !== id);
     state[action] = [trigger];
     state.learning = null;
     kb.classList.remove('hint');
-    status(`<b>${action === 'darker' ? 'Dunkler' : 'Heller'}</b> liegt jetzt auf ${trigger.label}.`);
+    status(TEXT.assigned(action === 'darker' ? TEXT.darker : TEXT.brighter, trigger.label));
     render();
   }
 
   function cancelLearning() {
     state.learning = null;
-    status('Abgebrochen.');
+    status(TEXT.cancelled);
     render();
   }
 
@@ -299,45 +351,42 @@
   // ——— Einstellungsfenster ———
   el.enabled.addEventListener('change', () => {
     state.enabled = el.enabled.checked;
-    status(state.enabled ? 'Tasten werden wieder abgefangen.' : 'Abfangen aus – die Tasten gehen wieder an macOS.');
+    status(state.enabled ? TEXT.captureOnAgain : TEXT.captureOffNow);
     render();
   });
   el.range.addEventListener('input', () => {
     setBrightness(Number(el.range.value), false);
-    status(`Helligkeit ${Math.round(state.brightness * 100)} %`);
+    status(TEXT.brightness(Math.round(state.brightness * 100)));
   });
   el.auto.addEventListener('change', () => {
     state.auto = el.auto.checked;
-    status(state.auto ? 'Automatik an – der nächste Tastendruck schaltet sie wieder ab.' : 'Automatik aus.');
+    status(state.auto ? TEXT.autoOn : TEXT.autoOff);
   });
   el.hud2.addEventListener('change', () => { state.showHUD = el.hud2.checked; });
   el.hide.addEventListener('change', () => {
     state.hideIcon = el.hide.checked;
-    status(state.hideIcon
-      ? 'Icon ausgeblendet – die Tasten funktionieren weiter. Zurückholen: App erneut öffnen.'
-      : 'Icon wieder in der Menüleiste.');
+    status(state.hideIcon ? TEXT.iconHidden : TEXT.iconShown);
     render();
   });
   el.login.addEventListener('change', () => { state.login = el.login.checked; });
   el.learnButtons.forEach(btn => btn.addEventListener('click', () => {
     const action = btn.dataset.learn;
     state.learning = state.learning === action ? null : action;
-    status(state.learning ? 'Jetzt eine Taste drücken – auf der Tastatur oben oder auf deiner eigenen. <b>esc</b> bricht ab.' : 'Abgebrochen.');
+    status(state.learning ? TEXT.learn : TEXT.cancelled);
     render();
   }));
   $('#btn-swap').addEventListener('click', () => {
     [state.darker, state.brighter] = [state.brighter, state.darker];
-    status('Tasten getauscht.');
+    status(TEXT.swapped);
     render();
   });
   $('#btn-reset').addEventListener('click', () => {
     state.darker = DEFAULTS.darker;
     state.brighter = DEFAULTS.brighter;
-    status('Standardbelegung: F5 dunkler, F6 heller.');
+    status(TEXT.reset);
     render();
   });
-  $('#btn-quit').addEventListener('click', () => status('In der App beendet <b>Quit</b> (⌘Q) KeyboardBacklight.'));
-  $('#btn-close').addEventListener('click', () => status('In der App schließt <b>Close</b> das Fenster wieder.'));
+  $('#btn-quit').addEventListener('click', () => status(TEXT.quit));
 
   el.mbApp.addEventListener('click', () => {
     el.popover.classList.add('is-flash');
@@ -366,7 +415,7 @@
       const prev = k.previousElementSibling, next = k.nextElementSibling;
       k.classList.toggle('tag-left', !!action && !!next && !!actionFor(next.dataset.id));
       k.classList.toggle('tag-right', !!action && !!prev && !!actionFor(prev.dataset.id));
-      k.querySelector('.tag').textContent = action === 'darker' ? '− dunkler' : action === 'brighter' ? '+ heller' : '';
+      k.querySelector('.tag').textContent = action === 'darker' ? TEXT.tagDarker : action === 'brighter' ? TEXT.tagBrighter : '';
       if (!k.hasAttribute('aria-hidden')) k.tabIndex = action ? 0 : -1;
     });
 
@@ -384,10 +433,10 @@
 
     ['darker', 'brighter'].forEach(action => {
       const learning = state.learning === action;
-      el.labels[action].textContent = learning ? 'Taste drücken … (Esc)' : labelFor(action);
+      el.labels[action].textContent = learning ? TEXT.pressKey : labelFor(action);
       el.labels[action].classList.toggle('is-learning', learning);
     });
-    el.learnButtons.forEach(btn => { btn.textContent = state.learning === btn.dataset.learn ? 'Abbrechen' : 'Ändern'; });
+    el.learnButtons.forEach(btn => { btn.textContent = state.learning === btn.dataset.learn ? TEXT.cancel : TEXT.change; });
 
     el.hudUse.setAttribute('href', b > 0 ? '#i-light-max' : '#i-light-min');
     const lit = Math.round(b * 16);
@@ -395,44 +444,30 @@
   }
   render();
 
-  // ——— Uhrzeit in der Menüleiste (wie macOS: „Sa. 26. Sept. 9:41“) ———
-  const WEEKDAYS = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
-  const MONTHS = ['Jan.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sept.', 'Okt.', 'Nov.', 'Dez.'];
+  // ——— Uhrzeit in der Menüleiste (wie macOS: „Sa. 26. Sept. 9:41“ bzw. „Sat Sep 26 9:41 AM“) ———
+  const WEEKDAYS = LANG === 'de' ? ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'] : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const MONTHS = LANG === 'de'
+    ? ['Jan.', 'Feb.', 'März', 'Apr.', 'Mai', 'Juni', 'Juli', 'Aug.', 'Sept.', 'Okt.', 'Nov.', 'Dez.']
+    : ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   function tick() {
     const d = new Date();
-    $('#mb-date').textContent = `${WEEKDAYS[d.getDay()]} ${d.getDate()}. ${MONTHS[d.getMonth()]}`;
-    $('#mb-time').textContent = `${d.getHours()}:${String(d.getMinutes()).padStart(2, '0')}`;
+    const min = String(d.getMinutes()).padStart(2, '0');
+    if (LANG === 'de') {
+      $('#mb-date').textContent = `${WEEKDAYS[d.getDay()]} ${d.getDate()}. ${MONTHS[d.getMonth()]}`;
+      $('#mb-time').textContent = `${d.getHours()}:${min}`;
+    } else {
+      $('#mb-date').textContent = `${WEEKDAYS[d.getDay()]} ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+      $('#mb-time').textContent = `${d.getHours() % 12 || 12}:${min} ${d.getHours() < 12 ? 'AM' : 'PM'}`;
+    }
   }
   tick();
   setInterval(tick, 15000);
 
-  // ——— Demo-Video: anhalten/abspielen, bei „Bewegung reduzieren“ kein Autoplay ———
-  const video = $('#demo-video');
-  const videoToggle = $('#video-toggle');
-  if (video && videoToggle) {
-    const sync = () => {
-      videoToggle.classList.toggle('is-paused', video.paused);
-      videoToggle.setAttribute('aria-label', video.paused ? 'Video abspielen' : 'Video anhalten');
-    };
-    let userPaused = reduceMotion;
-    if (reduceMotion) { video.removeAttribute('autoplay'); video.pause(); }
-    const toggle = () => {
-      userPaused = !video.paused;
-      if (userPaused) video.pause(); else video.play().catch(() => {});
-    };
-    videoToggle.addEventListener('click', toggle);
-    video.addEventListener('click', toggle);
-    // Nur abspielen, solange das Video zu sehen ist (Browser halten Autoplay außerhalb des Bildes oft an)
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([entry]) => {
-        if (entry.isIntersecting && !userPaused) video.play().catch(() => {});
-        else if (!entry.isIntersecting) video.pause();
-      }, { threshold: 0.25 }).observe(video);
-    }
-    video.addEventListener('play', sync);
-    video.addEventListener('pause', sync);
-    sync();
-  }
+  // ——— Sprachwahl merken (steuert die automatische Weiterleitung auf der deutschen Seite) ———
+  $$('.lang-switch a').forEach(a => a.addEventListener('click', () => {
+    try { localStorage.setItem('kb-lang', a.dataset.lang); } catch (e) {}
+    a.href = a.getAttribute('href').split('#')[0] + location.hash;
+  }));
 
   // ——— Sanftes Einblenden beim Scrollen ———
   if (!reduceMotion && 'IntersectionObserver' in window) {

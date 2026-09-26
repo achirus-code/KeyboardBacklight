@@ -1,38 +1,30 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>KeyboardBacklight – Tastaturbeleuchtung per Taste für macOS</title>
-  <meta name="description" content="Menüleisten-App für macOS: Tastaturbeleuchtung wieder per Taste steuern – F5 dunkler, F6 heller. 16 Stufen, Einblendung wie früher, Tasten frei belegbar.">
+  <title>KeyboardBacklight – Keyboard backlight on the keys for macOS</title>
+  <meta name="description" content="Menu bar app for macOS: control the keyboard backlight with keys again – F5 darker, F6 brighter. 16 steps, the overlay you remember, keys can be reassigned.">
   <meta name="theme-color" content="#07091a">
   <meta name="color-scheme" content="dark">
-  <link rel="icon" type="image/png" href="img/favicon-64.png">
-  <link rel="apple-touch-icon" href="img/icon-256.png">
+  <link rel="icon" type="image/png" href="../img/favicon-64.png">
+  <link rel="apple-touch-icon" href="../img/icon-256.png">
   <meta property="og:type" content="website">
-  <meta property="og:locale" content="de_DE">
-  <meta property="og:title" content="KeyboardBacklight – Tastaturbeleuchtung. Wieder per Taste.">
-  <meta property="og:description" content="Menüleisten-App für macOS: F5 dunkler, F6 heller – wie früher.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="KeyboardBacklight – Keyboard backlight. Back on the keys.">
+  <meta property="og:description" content="Menu bar app for macOS: F5 darker, F6 brighter – like it used to be.">
   <meta property="og:image" content="https://achirus-code.github.io/KeyboardBacklight/img/og.png">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://achirus-code.github.io/KeyboardBacklight/">
+  <link rel="canonical" href="https://achirus-code.github.io/KeyboardBacklight/en/">
   <link rel="alternate" hreflang="de" href="https://achirus-code.github.io/KeyboardBacklight/">
   <link rel="alternate" hreflang="en" href="https://achirus-code.github.io/KeyboardBacklight/en/">
   <link rel="alternate" hreflang="x-default" href="https://achirus-code.github.io/KeyboardBacklight/en/">
-  <script>
-    // Erster Besuch ohne deutsche Browsersprache → englische Seite. Eine Wahl über DE | EN gilt danach.
-    try {
-      const chosen = localStorage.getItem('kb-lang');
-      const german = (navigator.languages || [navigator.language]).some(l => /^de\b/i.test(l));
-      if (chosen === 'en' || (!chosen && !german)) location.replace('en/' + location.hash);
-    } catch (e) {}
-  </script>
-  <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <link rel="stylesheet" href="../style.css">
+  <script src="../app.js" defer></script>
 </head>
 <body>
 
-<!-- Symbole (angelehnt an die Beschriftung der MacBook-Tasten) -->
+<!-- Symbols (based on the MacBook key legends) -->
 <svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
   <symbol id="i-sun-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><g fill="currentColor"><circle cx="12" cy="5.4" r="1.1"/><circle cx="12" cy="18.6" r="1.1"/><circle cx="5.4" cy="12" r="1.1"/><circle cx="18.6" cy="12" r="1.1"/><circle cx="7.3" cy="7.3" r="1.1"/><circle cx="16.7" cy="16.7" r="1.1"/><circle cx="7.3" cy="16.7" r="1.1"/><circle cx="16.7" cy="7.3" r="1.1"/></g></symbol>
   <symbol id="i-sun-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
@@ -57,20 +49,20 @@
 
 <header class="nav">
   <div class="wrap nav-inner">
-    <a class="brand" href="#top" aria-label="KeyboardBacklight – zum Anfang">
-      <img src="img/favicon-64.png" alt="" width="28" height="28">
+    <a class="brand" href="#top" aria-label="KeyboardBacklight – back to top">
+      <img src="../img/favicon-64.png" alt="" width="28" height="28">
       <span>KeyboardBacklight</span>
     </a>
-    <nav class="nav-links" aria-label="Abschnitte">
-      <a href="#demo">Ausprobieren</a>
-      <a href="#funktionen">Funktionen</a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#demo">Try it</a>
+      <a href="#funktionen">Features</a>
       <a href="#download">Download</a>
-      <a href="#technik">Technik</a>
-      <a href="#faq">Fragen</a>
+      <a href="#technik">Tech</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="lang-switch" role="group" aria-label="Sprache">
-      <a href="./" hreflang="de" lang="de" aria-current="page" data-lang="de">DE</a>
-      <a href="en/" hreflang="en" lang="en" data-lang="en">EN</a>
+    <div class="lang-switch" role="group" aria-label="Language">
+      <a href="../" hreflang="de" lang="de" data-lang="de">DE</a>
+      <a href="./" hreflang="en" lang="en" aria-current="page" data-lang="en">EN</a>
     </div>
     <a class="btn btn-ghost btn-sm" href="https://github.com/achirus-code/KeyboardBacklight" aria-label="GitHub">
       <svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>GitHub</span>
@@ -83,31 +75,31 @@
   <section class="hero">
     <div class="stars" aria-hidden="true"></div>
     <div class="wrap hero-inner">
-      <img class="hero-icon" src="img/icon-512.png" alt="App-Icon von KeyboardBacklight: eine leuchtende Taste mit Mond" width="152" height="152">
-      <p class="eyebrow">Menüleisten-App für macOS</p>
-      <h1>Tastatur&shy;beleuchtung.<br><span class="glow-text">Wieder per Taste.</span></h1>
+      <img class="hero-icon" src="../img/icon-512.png" alt="KeyboardBacklight app icon: a glowing key with a moon" width="152" height="152">
+      <p class="eyebrow">Menu bar app for macOS</p>
+      <h1>Keyboard backlight.<br><span class="glow-text">Back on the keys.</span></h1>
       <p class="lead">
-        Auf aktuellen MacBooks gibt es keine Tasten mehr für die Tastaturbeleuchtung – sie steckt im Kontrollzentrum.
-        KeyboardBacklight legt sie zurück auf F5 und F6:
-        <kbd class="kc" title="F5 (Diktat)"><svg aria-hidden="true"><use href="#i-mic"/></svg><span class="sr">F5</span></kbd> dunkler,
-        <kbd class="kc" title="F6 (Nicht stören)"><svg aria-hidden="true"><use href="#i-moon"/></svg><span class="sr">F6</span></kbd> heller.
-        Wie früher.
+        Current MacBooks no longer have keys for the keyboard backlight – it's tucked away in Control Center.
+        KeyboardBacklight puts it back on F5 and F6:
+        <kbd class="kc" title="F5 (Dictation)"><svg aria-hidden="true"><use href="#i-mic"/></svg><span class="sr">F5</span></kbd> darker,
+        <kbd class="kc" title="F6 (Do Not Disturb)"><svg aria-hidden="true"><use href="#i-moon"/></svg><span class="sr">F6</span></kbd> brighter.
+        Like it used to be.
       </p>
       <div class="cta">
         <a class="btn btn-primary" href="#download"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span>Download</span></a>
-        <a class="btn btn-ghost" href="#demo">Ausprobieren</a>
+        <a class="btn btn-ghost" href="#demo">Try it</a>
       </div>
-      <p class="meta">macOS 14 oder neuer · Apple-Chip und Intel · Deutsch, English, Français, Español, Italiano</p>
+      <p class="meta">macOS 14 or later · Apple silicon and Intel · English, Deutsch, Français, Español, Italiano</p>
     </div>
   </section>
 
   <section id="demo" class="section demo-section">
     <div class="wrap">
       <header class="section-head">
-        <p class="eyebrow">Ausprobieren</p>
-        <h2>Die App im Kleinen</h2>
-        <p>Klicke auf F5 oder F6, halte die Taste gedrückt oder nimm <kbd class="k">←</kbd> und <kbd class="k">→</kbd>.
-          Mit <kbd class="k">⌥</kbd><kbd class="k">⇧</kbd> geht es in feinen Schritten. Das Einstellungsfenster funktioniert auch.</p>
+        <p class="eyebrow">Try it</p>
+        <h2>The app in miniature</h2>
+        <p>Click F5 or F6, hold the key down or use <kbd class="k">←</kbd> and <kbd class="k">→</kbd>.
+          Hold <kbd class="k">⌥</kbd><kbd class="k">⇧</kbd> for fine steps. The settings window works too.</p>
       </header>
 
       <div class="demo">
@@ -115,17 +107,17 @@
           <div class="screen">
             <div class="menubar">
               <div class="mb-left">
-                <strong>Finder</strong><span>Ablage</span><span>Bearbeiten</span><span class="mb-extra">Darstellung</span><span class="mb-extra">Gehe zu</span><span class="mb-extra">Fenster</span>
+                <strong>Finder</strong><span>File</span><span>Edit</span><span class="mb-extra">View</span><span class="mb-extra">Go</span><span class="mb-extra">Window</span>
               </div>
               <div class="notch" aria-hidden="true"></div>
               <div class="mb-right">
-                <button class="mb-app" id="mb-app" type="button" aria-label="KeyboardBacklight in der Menüleiste – Einstellungen zeigen">
+                <button class="mb-app" id="mb-app" type="button" aria-label="KeyboardBacklight in the menu bar – show settings">
                   <svg id="mb-icon" viewBox="0 0 22 16" aria-hidden="true"></svg>
                 </button>
                 <svg class="mb-ic mb-bat mb-extra" aria-hidden="true"><use href="#i-battery"/></svg>
                 <svg class="mb-ic mb-sq" aria-hidden="true"><use href="#i-wifi"/></svg>
                 <svg class="mb-ic mb-sq mb-extra" aria-hidden="true"><use href="#i-cc"/></svg>
-                <span class="mb-clock"><span class="mb-extra" id="mb-date">Sa. 26. Sept.</span> <span id="mb-time">9:41</span></span>
+                <span class="mb-clock"><span class="mb-extra" id="mb-date">Sat Sep 26</span> <span id="mb-time">9:41 AM</span></span>
               </div>
             </div>
             <div class="hud" id="hud" aria-hidden="true">
@@ -135,65 +127,65 @@
           </div>
           <div class="hinge" aria-hidden="true"></div>
           <div class="deck">
-            <div class="kb" id="kb" role="group" aria-label="MacBook-Tastatur (Vorschau)"></div>
+            <div class="kb" id="kb" role="group" aria-label="MacBook keyboard (preview)"></div>
           </div>
-          <p class="demo-status" id="demo-status" aria-live="polite">Klicke auf F5 oder F6.</p>
+          <p class="demo-status" id="demo-status" aria-live="polite">Click F5 or F6.</p>
         </div>
 
         <aside class="popover-wrap">
-          <p class="popover-caption">Ein Klick aufs Menüleisten-Symbol öffnet:</p>
-          <div class="popover" id="popover" aria-label="Einstellungen von KeyboardBacklight (Vorschau)" role="group">
+          <p class="popover-caption">Clicking the menu bar icon opens:</p>
+          <div class="popover" id="popover" aria-label="KeyboardBacklight settings (preview)" role="group">
             <div class="po-row po-head">
-              <strong>Tastaturbeleuchtung</strong>
-              <label class="switch" title="Tasten abfangen ein/aus">
-                <input type="checkbox" id="opt-enabled" role="switch" checked aria-label="Tasten abfangen">
+              <strong>Keyboard Backlight</strong>
+              <label class="switch" title="Capture keys on/off">
+                <input type="checkbox" id="opt-enabled" role="switch" checked aria-label="Capture keys">
                 <span class="switch-track"></span>
               </label>
             </div>
 
             <div class="po-row po-slider">
               <svg class="po-ic" aria-hidden="true"><use href="#i-light-min"/></svg>
-              <input type="range" id="opt-brightness" min="0" max="1" step="0.001" value="0.375" aria-label="Helligkeit">
+              <input type="range" id="opt-brightness" min="0" max="1" step="0.001" value="0.375" aria-label="Brightness">
               <svg class="po-ic" aria-hidden="true"><use href="#i-light-max"/></svg>
               <output id="opt-pct" for="opt-brightness">38 %</output>
             </div>
 
-            <label class="check" title="Bei hellem Licht schaltet macOS die Beleuchtung dann ganz aus. Ein Tastendruck schaltet die Automatik ab.">
-              <input type="checkbox" id="opt-auto"><span class="box"></span>An Umgebungslicht anpassen
+            <label class="check" title="In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off.">
+              <input type="checkbox" id="opt-auto"><span class="box"></span>Adjust to ambient light
             </label>
 
             <hr>
 
-            <strong class="po-sub">Tasten</strong>
+            <strong class="po-sub">Keys</strong>
             <div class="keyrow">
-              <span class="keyrow-title">Dunkler</span>
-              <span class="keyrow-label" id="label-darker">Diktat 🎙, F5</span>
-              <button type="button" class="mbtn mbtn-sm" data-learn="darker">Ändern</button>
+              <span class="keyrow-title">Darker</span>
+              <span class="keyrow-label" id="label-darker">Dictation 🎙, F5</span>
+              <button type="button" class="mbtn mbtn-sm" data-learn="darker">Change</button>
             </div>
             <div class="keyrow">
-              <span class="keyrow-title">Heller</span>
-              <span class="keyrow-label" id="label-brighter">Nicht stören 🌙, F6</span>
-              <button type="button" class="mbtn mbtn-sm" data-learn="brighter">Ändern</button>
+              <span class="keyrow-title">Brighter</span>
+              <span class="keyrow-label" id="label-brighter">Do Not Disturb 🌙, F6</span>
+              <button type="button" class="mbtn mbtn-sm" data-learn="brighter">Change</button>
             </div>
             <div class="po-buttons">
-              <button type="button" class="mbtn mbtn-sm" id="btn-swap">Tauschen</button>
-              <button type="button" class="mbtn mbtn-sm" id="btn-reset">Standard</button>
+              <button type="button" class="mbtn mbtn-sm" id="btn-swap">Swap</button>
+              <button type="button" class="mbtn mbtn-sm" id="btn-reset">Default</button>
             </div>
-            <p class="po-caption">⌥⇧ gedrückt halten für feinere Schritte</p>
+            <p class="po-caption">Hold ⌥⇧ for finer steps</p>
 
             <hr>
 
-            <label class="check"><input type="checkbox" id="opt-hud" checked><span class="box"></span>Anzeige beim Ändern einblenden</label>
+            <label class="check"><input type="checkbox" id="opt-hud" checked><span class="box"></span>Show overlay when changing</label>
             <div>
-              <label class="check"><input type="checkbox" id="opt-hide"><span class="box"></span>Menüleisten-Icon ausblenden</label>
-              <p class="po-caption po-indent">Zurückholen: App erneut öffnen (Finder, Spotlight).</p>
+              <label class="check"><input type="checkbox" id="opt-hide"><span class="box"></span>Hide menu bar icon</label>
+              <p class="po-caption po-indent">To bring it back, open the app again (Finder, Spotlight).</p>
             </div>
-            <label class="check"><input type="checkbox" id="opt-login"><span class="box"></span>Beim Anmelden starten</label>
+            <label class="check"><input type="checkbox" id="opt-login"><span class="box"></span>Launch at login</label>
 
             <hr>
 
             <div class="po-buttons po-footer">
-              <button type="button" class="mbtn" id="btn-quit">Beenden</button>
+              <button type="button" class="mbtn" id="btn-quit">Quit</button>
             </div>
           </div>
         </aside>
@@ -204,8 +196,8 @@
   <section id="warum" class="section">
     <div class="wrap">
       <header class="section-head">
-        <p class="eyebrow">Warum?</p>
-        <h2>Zwei Tasten, die gefehlt haben</h2>
+        <p class="eyebrow">Why?</p>
+        <h2>Two keys that went missing</h2>
       </header>
       <div class="story">
         <article class="card story-card">
@@ -213,24 +205,24 @@
             <span class="fk"><svg aria-hidden="true"><use href="#i-light-min"/></svg><small>F5</small></span>
             <span class="fk"><svg aria-hidden="true"><use href="#i-light-max"/></svg><small>F6</small></span>
           </div>
-          <h3>Früher</h3>
-          <p>Auf älteren MacBooks lag die Tastaturbeleuchtung direkt auf F5 und F6 – ein Druck, fertig.</p>
+          <h3>Before</h3>
+          <p>On older MacBooks, the keyboard backlight sat right on F5 and F6 – one press, done.</p>
         </article>
         <article class="card story-card">
           <div class="story-keys">
             <span class="fk"><svg aria-hidden="true"><use href="#i-mic"/></svg><small>F5</small></span>
             <span class="fk"><svg aria-hidden="true"><use href="#i-moon"/></svg><small>F6</small></span>
           </div>
-          <h3>Heute</h3>
-          <p>Dort sitzen jetzt Diktat und „Nicht stören“. Die Helligkeit der Tastatur gibt es nur noch per Klick im Kontrollzentrum.</p>
+          <h3>Today</h3>
+          <p>Those keys now hold Dictation and Do Not Disturb. Keyboard brightness is only a click away in Control Center.</p>
         </article>
         <article class="card story-card story-card-hl">
           <div class="story-keys">
-            <span class="fk fk-lit"><svg aria-hidden="true"><use href="#i-mic"/></svg><small>F5</small><em>dunkler</em></span>
-            <span class="fk fk-lit"><svg aria-hidden="true"><use href="#i-moon"/></svg><small>F6</small><em>heller</em></span>
+            <span class="fk fk-lit"><svg aria-hidden="true"><use href="#i-mic"/></svg><small>F5</small><em>darker</em></span>
+            <span class="fk fk-lit"><svg aria-hidden="true"><use href="#i-moon"/></svg><small>F6</small><em>brighter</em></span>
           </div>
-          <h3>Mit KeyboardBacklight</h3>
-          <p>Wieder auf F5 und F6: links dunkler, rechts heller, wie früher. Diktat und „Nicht stören“ fängt die App dafür ab. Wer mag, belegt die Tasten frei.</p>
+          <h3>With KeyboardBacklight</h3>
+          <p>Back on F5 and F6: left darker, right brighter, like before. The app intercepts Dictation and Do Not Disturb for this. If you like, you can assign other keys.</p>
         </article>
       </div>
     </div>
@@ -239,54 +231,54 @@
   <section id="funktionen" class="section">
     <div class="wrap">
       <header class="section-head">
-        <p class="eyebrow">Funktionen</p>
-        <h2>Klein, aber durchdacht</h2>
+        <p class="eyebrow">Features</p>
+        <h2>Small, but well thought out</h2>
       </header>
       <div class="features">
         <article class="card feature">
           <svg class="f-ic" aria-hidden="true"><use href="#i-light-max"/></svg>
-          <h3>16 Stufen – oder 64</h3>
-          <p>Jeder Druck ändert die Helligkeit um eine von 16 Stufen, wie früher. Mit gedrückter <kbd class="k">⌥</kbd><kbd class="k">⇧</kbd> geht es in Viertelschritten. Gedrückt halten wiederholt in angenehmem Tempo.</p>
+          <h3>16 steps – or 64</h3>
+          <p>Each press changes the brightness by one of 16 steps, like before. Hold <kbd class="k">⌥</kbd><kbd class="k">⇧</kbd> for quarter steps. Holding a key repeats at a comfortable pace.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.5 11.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><g fill="currentColor"><rect x="6" y="15" width="1.8" height="1.8"/><rect x="8.6" y="15" width="1.8" height="1.8"/><rect x="11.2" y="15" width="1.8" height="1.8"/><rect x="13.8" y="15" width="1.8" height="1.8" opacity=".35"/><rect x="16.4" y="15" width="1.8" height="1.8" opacity=".35"/></g></svg>
-          <h3>Einblendung wie damals</h3>
-          <p>Symbol und 16 Segmente, unten mittig auf dem Bildschirm, auf dem gerade die Maus ist. Wer sie nicht braucht, schaltet sie ab.</p>
+          <h3>The overlay you remember</h3>
+          <p>Symbol and 16 segments, bottom center on the screen the mouse is on. Don't need it? Turn it off.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 22 16" aria-hidden="true" data-menubar-icon="0.8"></svg>
-          <h3>Menüleisten-Symbol im alten Stil</h3>
-          <p>Ein Balken mit fünf Punkten im Halbkreis. Die Punkte leuchten mit der Helligkeit auf – ein Blick nach oben genügt.</p>
+          <h3>Menu bar icon in the classic style</h3>
+          <p>A bar with five dots in a semicircle. The dots light up with the brightness – a glance up is all it takes.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8 9.5h8l-2.2-2.2M16 14.5H8l2.2 2.2" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h3>Frei belegbar</h3>
-          <p>Auf „Ändern“ klicken, Taste drücken, fertig. „Tauschen“ tauscht die beiden Tasten, „Standard“ stellt F5 und F6 wieder her. Klappt mit und ohne „F1, F2 usw. als Standard-Funktionstasten“.</p>
+          <h3>Assign any key</h3>
+          <p>Click “Change”, press a key, done. “Swap” swaps the two keys, “Default” restores F5 and F6. Works with and without “Use F1, F2, etc. keys as standard function keys”.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.8l7.5 3v5.6c0 4.6-3.1 8.2-7.5 9.8-4.4-1.6-7.5-5.2-7.5-9.8V5.8z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><path d="M8.6 12.2l2.4 2.4 4.6-4.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h3>Nur deine zwei Tasten</h3>
-          <p>Belegte Tasten werden abgefangen, bevor macOS sie sieht – Diktat und „Nicht stören“ bleiben ruhig. Alle anderen Tasten gehen unverändert durch.</p>
+          <h3>Only your two keys</h3>
+          <p>Assigned keys are intercepted before macOS sees them – Dictation and Do Not Disturb stay quiet. All other keys pass through unchanged.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12s3.3-6 9-6c1.6 0 3 .5 4.2 1.1M21 12s-3.3 6-9 6c-1.6 0-3-.5-4.2-1.1M9.9 14.1A3 3 0 0 1 14.1 9.9M4 20L20 4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          <h3>Auf Wunsch unsichtbar</h3>
-          <p>Menüleisten-Icon ausblenden, die Tasten funktionieren weiter. Die App erneut öffnen – über Finder oder Spotlight – holt Icon und Einstellungen zurück.</p>
+          <h3>Invisible if you like</h3>
+          <p>Hide the menu bar icon and the keys keep working. Opening the app again – via Finder or Spotlight – brings back the icon and settings.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v8.5M7.2 6.3a7.5 7.5 0 1 0 9.6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          <h3>Startet mit dem Mac</h3>
-          <p>Autostart beim Anmelden mit einem Haken. Dann läuft die App still im Hintergrund – ohne Dock-Icon und ohne dass sich ein Fenster öffnet.</p>
+          <h3>Starts with your Mac</h3>
+          <p>Launch at login with a single checkbox. The app then runs quietly in the background – no Dock icon, no window popping up.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          <h3>Umgebungslicht im Griff</h3>
-          <p>Bei hellem Licht hält die macOS-Automatik die Beleuchtung aus. Der erste Tastendruck schaltet sie deshalb ab – im Menü jederzeit wieder aktivierbar.</p>
+          <h3>Ambient light under control</h3>
+          <p>In bright light, the macOS automatic adjustment keeps the backlight off. That's why the first key press turns it off – you can turn it back on in the menu anytime.</p>
         </article>
         <article class="card feature">
           <svg class="f-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 7L3.5 12l5 5M15.5 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <h3>Schlank und privat</h3>
-          <p>Unter 1.000 Zeilen Swift, keine Abhängigkeiten, keine Netzwerkzugriffe. Der Quellcode liegt offen auf GitHub.</p>
+          <h3>Lean and private</h3>
+          <p>Under 1,000 lines of Swift, no dependencies, no network access. The source code is open on GitHub.</p>
         </article>
       </div>
     </div>
@@ -296,44 +288,44 @@
     <div class="wrap">
       <header class="section-head">
         <p class="eyebrow">Download</p>
-        <h2>Laden, öffnen, fertig</h2>
-        <p>Eine ZIP-Datei mit der fertigen App. Kein Installationsprogramm, kein Konto.</p>
+        <h2>Download, open, done</h2>
+        <p>A ZIP file with the ready-to-use app. No installer, no account.</p>
       </header>
       <div class="card download">
-        <img src="img/icon-256.png" alt="" width="84" height="84">
+        <img src="../img/icon-256.png" alt="" width="84" height="84">
         <div class="download-text">
-          <h3>KeyboardBacklight für macOS</h3>
-          <p>Neueste Version · macOS 14 oder neuer · Apple-Chip und Intel · in fünf Sprachen</p>
+          <h3>KeyboardBacklight for macOS</h3>
+          <p>Latest version · macOS 14 or later · Apple silicon and Intel · in five languages</p>
         </div>
         <div class="download-actions">
           <a class="btn btn-primary" href="https://github.com/achirus-code/KeyboardBacklight/releases/latest/download/KeyboardBacklight.zip"><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg><span>Download (ZIP)</span></a>
-          <a class="download-more" href="https://github.com/achirus-code/KeyboardBacklight/releases">Alle Versionen</a>
+          <a class="download-more" href="https://github.com/achirus-code/KeyboardBacklight/releases">All versions</a>
         </div>
       </div>
       <ol class="steps">
         <li class="card step">
           <span class="step-n">1</span>
           <div class="step-body">
-            <h3>In „Programme“ ziehen</h3>
-            <p>Die ZIP-Datei per Doppelklick öffnen und KeyboardBacklight in den Ordner „Programme“ ziehen.</p>
+            <h3>Drag to Applications</h3>
+            <p>Double-click the ZIP file to open it and drag KeyboardBacklight into the Applications folder.</p>
           </div>
         </li>
         <li class="card step">
           <span class="step-n">2</span>
           <div class="step-body">
-            <h3>Beim ersten Öffnen bestätigen</h3>
-            <p>Die App ist nicht bei Apple notarisiert, deshalb blockiert macOS den ersten Start. Die Meldung schließen und die App hier freigeben:</p>
-            <p class="path">Systemeinstellungen › Datenschutz &amp; Sicherheit › Dennoch öffnen</p>
-            <p class="hint">Das ist nur beim ersten Start nötig.</p>
+            <h3>Confirm on first launch</h3>
+            <p>The app isn't notarized by Apple, so macOS blocks the first launch. Close the message and allow the app here:</p>
+            <p class="path">System Settings › Privacy &amp; Security › Open Anyway</p>
+            <p class="hint">You only need to do this once.</p>
           </div>
         </li>
         <li class="card step">
           <span class="step-n">3</span>
           <div class="step-body">
-            <h3>Bedienungshilfen erlauben</h3>
-            <p>Danach fragt macOS nach dem Bedienungshilfen-Zugriff – ohne ihn lassen sich die Tasten nicht abfangen. Einschalten unter:</p>
-            <p class="path">Systemeinstellungen › Datenschutz &amp; Sicherheit › Bedienungshilfen › KeyboardBacklight</p>
-            <p class="hint">Die App bemerkt die Freigabe von selbst, ein Neustart ist nicht nötig.</p>
+            <h3>Allow Accessibility</h3>
+            <p>Next, macOS asks for Accessibility access – without it, the keys can't be captured. Turn it on under:</p>
+            <p class="path">System Settings › Privacy &amp; Security › Accessibility › KeyboardBacklight</p>
+            <p class="hint">The app notices the permission by itself, no restart needed.</p>
           </div>
         </li>
       </ol>
@@ -343,18 +335,18 @@
   <section id="technik" class="section">
     <div class="wrap tech">
       <header class="section-head section-head-left">
-        <p class="eyebrow">Technik</p>
-        <h2>Unter der Haube</h2>
-        <p>Eine native Swift-App aus SwiftUI und AppKit, gebaut als Swift Package. Sie spricht dieselbe Schnittstelle an wie macOS selbst.</p>
-        <a class="btn btn-ghost" href="https://github.com/achirus-code/KeyboardBacklight"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>Quellcode ansehen</span></a>
+        <p class="eyebrow">Tech</p>
+        <h2>Under the hood</h2>
+        <p>A native Swift app made with SwiftUI and AppKit, built as a Swift package. It talks to the same interface macOS itself uses.</p>
+        <a class="btn btn-ghost" href="https://github.com/achirus-code/KeyboardBacklight"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>View source code</span></a>
       </header>
       <dl class="spec">
-        <div><dt>Helligkeit</dt><dd>Privates Framework <code>CoreBrightness</code> mit <code>KeyboardBrightnessClient</code>. Die eingebaute Tastatur hat Vorrang.</dd></div>
-        <div><dt>Tasten</dt><dd>Ein <code>CGEventTap</code> fängt nur die belegten Tasten ab: F5 = Tastencode 176 (Diktat), F6 = 178 (Nicht stören); mit Standard-Funktionstasten die Codes 96 und 97.</dd></div>
-        <div><dt>Automatik</dt><dd>Bei hellem Umgebungslicht hält die Helligkeitsautomatik die Beleuchtung aus. Sie wird beim ersten Tastendruck abgeschaltet und ist im Menü wieder aktivierbar.</dd></div>
-        <div><dt>Autostart</dt><dd>Über <code>SMAppService</code>. Beim Anmelden startet die App still, ein manueller Start zeigt bei ausgeblendetem Icon die Einstellungen.</dd></div>
-        <div><dt>Signatur</dt><dd>Ad hoc mit fester Anforderung (nur die Bundle-ID) – so bleibt der Bedienungshilfen-Zugriff auch nach einem Update erhalten.</dd></div>
-        <div><dt>Releases</dt><dd>Jede Version baut GitHub Actions direkt aus dem Quellcode dieses Repositorys, für Apple-Chip und Intel.</dd></div>
+        <div><dt>Brightness</dt><dd>Private framework <code>CoreBrightness</code> with <code>KeyboardBrightnessClient</code>. The built-in keyboard takes priority.</dd></div>
+        <div><dt>Keys</dt><dd>A <code>CGEventTap</code> captures only the assigned keys: F5 = key code 176 (Dictation), F6 = 178 (Do Not Disturb); with standard function keys, codes 96 and 97.</dd></div>
+        <div><dt>Auto brightness</dt><dd>In bright ambient light, automatic brightness keeps the backlight off. It is turned off on the first key press and can be turned back on in the menu.</dd></div>
+        <div><dt>Launch at login</dt><dd>Via <code>SMAppService</code>. At login the app starts quietly; when the icon is hidden, a manual launch shows the settings.</dd></div>
+        <div><dt>Signing</dt><dd>Ad hoc with a fixed requirement (bundle ID only) – so Accessibility access survives updates.</dd></div>
+        <div><dt>Releases</dt><dd>GitHub Actions builds every version directly from this repository's source code, for Apple silicon and Intel.</dd></div>
       </dl>
     </div>
   </section>
@@ -362,41 +354,41 @@
   <section id="faq" class="section">
     <div class="wrap wrap-narrow">
       <header class="section-head">
-        <p class="eyebrow">Fragen</p>
-        <h2>Häufige Fragen</h2>
+        <p class="eyebrow">FAQ</p>
+        <h2>Frequently asked questions</h2>
       </header>
       <div class="faq">
         <details>
-          <summary>Warum braucht die App den Bedienungshilfen-Zugriff?</summary>
-          <p>Nur so kann sie F5 und F6 abfangen, bevor macOS das Diktat startet oder „Nicht stören“ umschaltet. Abgefangen werden ausschließlich die belegten Tasten, alle anderen gehen unverändert weiter. Die App hat keinerlei Netzwerkzugriff und speichert keine Eingaben.</p>
+          <summary>Why does the app need Accessibility access?</summary>
+          <p>It's the only way to capture F5 and F6 before macOS starts Dictation or toggles Do Not Disturb. Only the assigned keys are intercepted, all others pass through unchanged. The app has no network access whatsoever and doesn't store any input.</p>
         </details>
         <details>
-          <summary>Warum warnt macOS beim ersten Öffnen?</summary>
-          <p>KeyboardBacklight ist nicht bei Apple notarisiert, dafür wäre ein kostenpflichtiges Entwicklerkonto nötig. macOS startet die App deshalb erst, wenn du sie unter Systemeinstellungen › Datenschutz &amp; Sicherheit mit „Dennoch öffnen“ freigibst. Der Quellcode ist offen auf GitHub, und jede Version wird dort automatisch daraus gebaut.</p>
+          <summary>Why does macOS show a warning on first launch?</summary>
+          <p>KeyboardBacklight isn't notarized by Apple – that would require a paid developer account. So macOS only launches the app once you allow it under System Settings › Privacy &amp; Security with “Open Anyway”. The source code is open on GitHub, and every version is built from it automatically.</p>
         </details>
         <details>
-          <summary>Wie bekomme ich eine neue Version?</summary>
-          <p>Die neue ZIP-Datei laden und die App im Ordner „Programme“ ersetzen. Der Bedienungshilfen-Zugriff bleibt dabei erhalten.</p>
+          <summary>How do I get a new version?</summary>
+          <p>Download the new ZIP file and replace the app in the Applications folder. Accessibility access is kept.</p>
         </details>
         <details>
-          <summary>Ich brauche Diktat oder „Nicht stören“ doch mal – was nun?</summary>
-          <p>Mit dem Schalter oben im Einstellungsfenster lässt sich das Abfangen jederzeit pausieren. Oder du legst Dunkler und Heller einfach auf andere Tasten.</p>
+          <summary>I do need Dictation or Do Not Disturb sometimes – now what?</summary>
+          <p>The switch at the top of the settings window pauses capturing at any time. Or simply assign Darker and Brighter to other keys.</p>
         </details>
         <details>
-          <summary>Das Menüleisten-Icon ist weg. Wie komme ich an die Einstellungen?</summary>
-          <p>Öffne die App einfach noch einmal – über den Finder, Spotlight oder das Launchpad. Dann erscheinen Icon und Einstellungen. Ein Klick daneben schließt die Einstellungen, und das Icon verschwindet wieder.</p>
+          <summary>The menu bar icon is gone. How do I get to the settings?</summary>
+          <p>Just open the app again – via Finder, Spotlight or Launchpad. The icon and settings appear. Clicking outside closes the settings, and the icon disappears again.</p>
         </details>
         <details>
-          <summary>Bei hellem Licht geht die Beleuchtung trotzdem aus.</summary>
-          <p>Das ist die Helligkeitsautomatik von macOS. KeyboardBacklight schaltet sie beim ersten Tastendruck ab. Falls du sie über „An Umgebungslicht anpassen“ wieder eingeschaltet hast, übernimmt sie erneut.</p>
+          <summary>The backlight still turns off in bright light.</summary>
+          <p>That's the macOS automatic brightness. KeyboardBacklight turns it off on the first key press. If you've turned it back on via “Adjust to ambient light”, it takes over again.</p>
         </details>
         <details>
-          <summary>Muss ich „F1, F2 usw. als Standard-Funktionstasten verwenden“ umstellen?</summary>
-          <p>Nein. Die Tasten schicken je nach Einstellung unterschiedliche Signale – die Standardbelegung deckt beide Varianten ab.</p>
+          <summary>Do I need to change “Use F1, F2, etc. keys as standard function keys”?</summary>
+          <p>No. The keys send different signals depending on that setting – the default assignment covers both.</p>
         </details>
         <details>
-          <summary>Auf welchen Macs läuft das?</summary>
-          <p>Vorausgesetzt ist macOS 14 oder neuer und eine Tastatur mit Beleuchtung. Die App ist für Apple-Chip und Intel gebaut, getestet ist sie auf einem MacBook Air M3 mit macOS 26. Findet sie keine Tastaturbeleuchtung, zeigt das Einstellungsfenster einen Hinweis.</p>
+          <summary>Which Macs does it run on?</summary>
+          <p>You need macOS 14 or later and a backlit keyboard. The app is built for Apple silicon and Intel and tested on a MacBook Air M3 with macOS 26. If it can't find a keyboard backlight, the settings window shows a notice.</p>
         </details>
       </div>
     </div>
@@ -406,9 +398,9 @@
 
 <footer class="footer">
   <div class="wrap footer-inner">
-    <a class="brand" href="#top"><img src="img/favicon-64.png" alt="" width="24" height="24"><span>KeyboardBacklight</span></a>
-    <p>Menüleisten-App für macOS · <a href="https://github.com/achirus-code/KeyboardBacklight">GitHub</a></p>
-    <p class="fine">Kein Produkt von Apple. Mac, MacBook und macOS sind Marken der Apple Inc.</p>
+    <a class="brand" href="#top"><img src="../img/favicon-64.png" alt="" width="24" height="24"><span>KeyboardBacklight</span></a>
+    <p>Menu bar app for macOS · <a href="https://github.com/achirus-code/KeyboardBacklight">GitHub</a></p>
+    <p class="fine">Not an Apple product. Mac, MacBook and macOS are trademarks of Apple Inc.</p>
   </div>
 </footer>
 

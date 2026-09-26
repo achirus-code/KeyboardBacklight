@@ -8,16 +8,19 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
     private let state: AppState
     private let popover = NSPopover()
     private var item: NSStatusItem?
+    private var outsideClickMonitor: Any?
     private var subscriptions = Set<AnyCancellable>()
 
     init(state: AppState) {
         self.state = state
         super.init()
 
-        let host = NSHostingController(rootView: PopupView(onClose: { [weak self] in self?.popover.performClose(nil) })
-            .environmentObject(state))
+        let host = NSHostingController(rootView: PopupView().environmentObject(state))
         host.sizingOptions = .preferredContentSize
         popover.contentViewController = host
+        // Closing on a click outside is handled by `outsideClickMonitor`: `.transient` would already
+        // close the popover during app launch when the focus shifts.
+        popover.behavior = .applicationDefined
         popover.delegate = self
 
         state.$iconVisible
@@ -29,13 +32,12 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
             .store(in: &subscriptions)
     }
 
-    /// Manual launch or reopening: show the icon and open the settings. They stay open
-    /// until the user closes them – clicking outside doesn't close them.
+    /// Manual launch or reopening: show the icon and open the settings.
     func reveal() {
         state.iconVisible = true
         // Give the newly created icon a moment to be placed in the menu bar
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            self?.showPopover(pinned: true)
+            self?.showPopover()
         }
     }
 
@@ -57,21 +59,28 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         if popover.isShown {
             popover.performClose(nil)
         } else {
-            showPopover(pinned: false)
+            showPopover()
         }
     }
 
-    private func showPopover(pinned: Bool) {
-        guard let button = item?.button else { return }
-        popover.behavior = pinned ? .applicationDefined : .transient
-        if popover.isShown { return }
+    private func showPopover() {
+        guard let button = item?.button, !popover.isShown else { return }
         state.refresh()
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         NSApp.activate()
         popover.contentViewController?.view.window?.makeKey()
     }
 
+    func popoverDidShow(_ notification: Notification) {
+        // Global monitors only see clicks in other apps – exactly "next to the settings"
+        outsideClickMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown, .otherMouseDown]) { [weak self] _ in
+            MainActor.assumeIsolated { self?.popover.performClose(nil) }
+        }
+    }
+
     func popoverDidClose(_ notification: Notification) {
+        if let outsideClickMonitor { NSEvent.removeMonitor(outsideClickMonitor) }
+        outsideClickMonitor = nil
         state.popupDidClose()
     }
 }
