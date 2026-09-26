@@ -1,21 +1,21 @@
 import AppKit
 
-/// Unterscheidet einen Autostart (Anmelden/Neustart) von einem manuellen Start.
+/// Tells a launch at login (login/restart) apart from a manual launch.
 enum LaunchContext {
-    /// Nur in `applicationDidFinishLaunching` aufrufen – dort ist das Start-Event noch aktuell.
+    /// Only call from `applicationDidFinishLaunching` – that's where the launch event is still current.
     static func launchedAtLogin() -> Bool {
-        // Klassisches Kennzeichen im „open application“-Event
+        // Classic marker in the "open application" event
         if let event = NSAppleEventManager.shared().currentAppleEvent,
            event.eventID == kAEOpenApplication,
            event.paramDescriptor(forKeyword: keyAEPropData)?.enumCodeValue == keyAELaunchedAsLogInItem {
             return true
         }
-        // SMAppService setzt das Kennzeichen nicht zuverlässig → kurz nach Sitzungsbeginn gilt als Autostart
+        // SMAppService doesn't set the marker reliably → shortly after the session starts counts as launch at login
         let sessionAge = sessionStart().map { Date().timeIntervalSince($0) } ?? ProcessInfo.processInfo.systemUptime
         return sessionAge < 180
     }
 
-    /// Startzeit des loginwindow-Prozesses des aktuellen Benutzers = Beginn der Sitzung.
+    /// Start time of the current user's loginwindow process = start of the session.
     private static func sessionStart() -> Date? {
         let uid = getuid()
         var mib: [Int32] = [CTL_KERN, KERN_PROC, KERN_PROC_UID, Int32(uid)]

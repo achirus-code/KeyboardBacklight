@@ -1,51 +1,94 @@
-# Baut KeyboardBacklight.app auf einem Mac-Runner und veröffentlicht sie als Release.
-# Auslösen mit einem Versions-Tag: git tag v1.1 && git push origin v1.1
-name: Release
+# Builds KeyboardBacklight.app on a Mac runner for Apple silicon and Intel.
+# - Pull requests: test build, uploaded as a workflow artifact.
+# - Push to main: creates the release v<version> with KeyboardBacklight.zip, unless the
+#   version in Info.plist (CFBundleShortVersionString) already has a release.
+#   To ship a new version, bump that version and merge to main.
+name: Build & Release
 
 on:
+  pull_request:
+    paths:
+      - "Sources/**"
+      - "Resources/**"
+      - "Scripts/**"
+      - "Info.plist"
+      - "Package.swift"
+      - "build.sh"
+      - ".github/workflows/release.yml"
   push:
-    tags: ["v*"]
+    branches: [main]
+    paths:
+      - "Sources/**"
+      - "Resources/**"
+      - "Scripts/**"
+      - "Info.plist"
+      - "Package.swift"
+      - "build.sh"
+      - ".github/workflows/release.yml"
+  workflow_dispatch:
 
 permissions:
   contents: write
 
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
-  release:
+  build:
     runs-on: macos-15
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PUBLISH: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Version aus dem Tag übernehmen
+      - name: Read version
         run: |
-          plutil -replace CFBundleShortVersionString -string "${GITHUB_REF_NAME#v}" Info.plist
+          VERSION=$(plutil -extract CFBundleShortVersionString raw Info.plist)
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          if [[ "$PUBLISH" == true ]] && gh release view "v$VERSION" >/dev/null 2>&1; then
+            echo "Release v$VERSION already exists – bump CFBundleShortVersionString to publish a new one."
+            echo "SKIP=true" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build app (Apple silicon and Intel)
+        if: env.SKIP != 'true'
+        run: |
           plutil -replace CFBundleVersion -string "$GITHUB_RUN_NUMBER" Info.plist
+          UNIVERSAL=1 ./build.sh
 
-      - name: App bauen (Apple-Chip und Intel)
-        run: UNIVERSAL=1 ./build.sh
-
-      - name: Prüfen und verpacken
+      - name: Verify and package
+        if: env.SKIP != 'true'
         run: |
           codesign --verify --deep --strict --verbose=2 KeyboardBacklight.app
           lipo -info KeyboardBacklight.app/Contents/MacOS/KeyboardBacklight
           ditto -c -k --keepParent KeyboardBacklight.app KeyboardBacklight.zip
           shasum -a 256 KeyboardBacklight.zip
 
-      - name: Release veröffentlichen
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Upload test build
+        if: env.SKIP != 'true' && env.PUBLISH != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: KeyboardBacklight-${{ env.VERSION }}
+          path: KeyboardBacklight.zip
+
+      - name: Publish release
+        if: env.SKIP != 'true' && env.PUBLISH == 'true'
         run: |
           SHA=$(shasum -a 256 KeyboardBacklight.zip | cut -d' ' -f1)
           cat > notes.md <<EOF
           ## Installation
 
-          1. **KeyboardBacklight.zip** laden, per Doppelklick entpacken und die App in den Ordner „Programme“ ziehen.
-          2. App öffnen. Sie ist nicht bei Apple notarisiert, deshalb blockiert macOS den ersten Start: Meldung schließen und unter **Systemeinstellungen › Datenschutz & Sicherheit** auf **Dennoch öffnen** klicken.
-          3. Den **Bedienungshilfen-Zugriff** erlauben – ohne ihn lassen sich die Tasten nicht abfangen.
+          1. Download **KeyboardBacklight.zip**, unzip it and move the app to your Applications folder.
+          2. Open the app. It isn't notarized by Apple, so macOS blocks the first launch: close the message, then click **Open Anyway** in **System Settings › Privacy & Security**.
+          3. Allow **Accessibility** access – without it the keys can't be captured.
 
-          Voraussetzungen: macOS 14 oder neuer, Mac mit Tastaturbeleuchtung. Gebaut für Apple-Chip und Intel.
+          Requirements: macOS 14 or later, a Mac with a keyboard backlight. Built for Apple silicon and Intel.
 
-          SHA-256 von \`KeyboardBacklight.zip\`: \`$SHA\`
+          SHA-256 of \`KeyboardBacklight.zip\`: \`$SHA\`
           EOF
-          gh release create "$GITHUB_REF_NAME" KeyboardBacklight.zip \
-            --title "KeyboardBacklight ${GITHUB_REF_NAME#v}" \
+          gh release create "v$VERSION" KeyboardBacklight.zip \
+            --target "$GITHUB_SHA" \
+            --title "KeyboardBacklight $VERSION" \
             --notes-file notes.md

@@ -9,17 +9,17 @@ struct PopupView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Tastaturbeleuchtung").font(.headline)
+                Text("Keyboard Backlight").font(.headline)
                 Spacer()
                 Toggle("", isOn: $state.enabled)
                     .toggleStyle(.switch)
                     .controlSize(.small)
                     .labelsHidden()
-                    .help("Tasten abfangen ein/aus")
+                    .help("Capture keys on/off")
             }
 
             if !state.backlight.isAvailable {
-                Label("Keine Tastaturbeleuchtung gefunden", systemImage: "exclamationmark.triangle")
+                Label("No keyboard backlight found", systemImage: "exclamationmark.triangle")
                     .foregroundStyle(.orange)
             }
 
@@ -33,9 +33,9 @@ struct PopupView: View {
                     .frame(width: 42, alignment: .trailing)
             }
 
-            Toggle("An Umgebungslicht anpassen", isOn: Binding(get: { state.autoBrightness },
-                                                             set: { state.setAutoBrightness($0) }))
-                .help("Bei hellem Licht schaltet macOS die Beleuchtung dann ganz aus. Tastendruck schaltet die Automatik ab.")
+            Toggle("Adjust to ambient light", isOn: Binding(get: { state.autoBrightness },
+                                                          set: { state.setAutoBrightness($0) }))
+                .help("In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off.")
 
             if !state.hasAccessibility {
                 accessibilityWarning
@@ -43,30 +43,30 @@ struct PopupView: View {
 
             Divider()
 
-            Text("Tasten").font(.subheadline.weight(.semibold))
-            keyRow("Dunkler", action: .darker)
-            keyRow("Heller", action: .brighter)
+            Text("Keys").font(.subheadline.weight(.semibold))
+            keyRow("Darker", action: .darker)
+            keyRow("Brighter", action: .brighter)
             HStack {
-                Button("Tauschen") { state.swapKeys() }
-                Button("Standard") { state.resetKeys() }
+                Button("Swap") { state.swapKeys() }
+                Button("Default") { state.resetKeys() }
                 Spacer()
             }
             .controlSize(.small)
-            Text("⌥⇧ gedrückt halten für feinere Schritte")
+            Text("Hold ⌥⇧ for finer steps")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
             Divider()
 
-            Toggle("Anzeige beim Ändern einblenden", isOn: $state.showHUD)
+            Toggle("Show overlay when changing", isOn: $state.showHUD)
             VStack(alignment: .leading, spacing: 2) {
-                Toggle("Menüleisten-Icon ausblenden", isOn: $state.hideIcon)
-                Text("Zurückholen: App erneut öffnen (Finder, Spotlight).")
+                Toggle("Hide menu bar icon", isOn: $state.hideIcon)
+                Text("To bring it back, open the app again (Finder, Spotlight).")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .padding(.leading, 20)
             }
-            Toggle("Beim Anmelden starten", isOn: $launchAtLogin)
+            Toggle("Launch at login", isOn: $launchAtLogin)
                 .onChange(of: launchAtLogin) { _, on in
                     do {
                         try LaunchAtLogin.set(on)
@@ -83,10 +83,10 @@ struct PopupView: View {
             Divider()
 
             HStack {
-                Button("Beenden") { NSApp.terminate(nil) }
+                Button("Quit") { NSApp.terminate(nil) }
                     .keyboardShortcut("q")
                 Spacer()
-                Button("Schließen", action: onClose)
+                Button("Close", action: onClose)
                     .keyboardShortcut(.defaultAction)
             }
         }
@@ -99,7 +99,7 @@ struct PopupView: View {
         HStack(alignment: .firstTextBaseline) {
             Text(title).frame(width: 60, alignment: .leading)
             if state.learning == action {
-                Text("Taste drücken … (Esc)")
+                Text("Press a key … (Esc)")
                     .foregroundStyle(.tint)
             } else {
                 Text(state.label(for: action))
@@ -107,7 +107,7 @@ struct PopupView: View {
                     .lineLimit(2)
             }
             Spacer()
-            Button(state.learning == action ? "Abbrechen" : "Ändern") { state.startLearning(action) }
+            Button(state.learning == action ? "Cancel" : "Change") { state.startLearning(action) }
                 .controlSize(.small)
                 .disabled(!state.hasAccessibility)
         }
@@ -115,12 +115,12 @@ struct PopupView: View {
 
     private var accessibilityWarning: some View {
         VStack(alignment: .leading, spacing: 6) {
-            Label("Bedienungshilfen-Zugriff fehlt", systemImage: "hand.raised")
+            Label("Accessibility access missing", systemImage: "hand.raised")
                 .foregroundStyle(.orange)
-            Text("Ohne ihn kann KeyboardBacklight die Mond- und Zurück-Taste nicht abfangen.")
+            Text("Without it, KeyboardBacklight can't capture the brightness keys.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
-            Button("Systemeinstellungen öffnen") { state.openAccessibilitySettings() }
+            Button("Open System Settings") { state.openAccessibilitySettings() }
                 .controlSize(.small)
         }
     }

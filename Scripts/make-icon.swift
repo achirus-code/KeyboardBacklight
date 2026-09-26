@@ -1,5 +1,5 @@
-// Zeichnet das App-Icon und erzeugt Resources/AppIcon.icns.
-// Aufruf: swift Scripts/make-icon.swift
+// Draws the app icon and creates Resources/AppIcon.icns.
+// Usage: swift Scripts/make-icon.swift
 import AppKit
 
 let root = URL(fileURLWithPath: CommandLine.arguments[0]).deletingLastPathComponent().deletingLastPathComponent()
@@ -16,7 +16,7 @@ func draw(_ ctx: CGContext, _ s: CGFloat) {
     let space = CGColorSpace(name: CGColorSpace.sRGB)!
     ctx.scaleBy(x: s / 1024, y: s / 1024)
 
-    // Hintergrund: Squircle mit Nachthimmel-Verlauf (macOS-Raster: 824 pt mit 100 pt Rand)
+    // Background: squircle with a night sky gradient (macOS grid: 824 pt with a 100 pt margin)
     let bg = CGRect(x: 100, y: 100, width: 824, height: 824)
     let bgPath = CGPath(roundedRect: bg, cornerWidth: 185, cornerHeight: 185, transform: nil)
     ctx.saveGState()
@@ -32,14 +32,14 @@ func draw(_ ctx: CGContext, _ s: CGFloat) {
     let sky = CGGradient(colorsSpace: space, colors: [color(0x2A3170), color(0x0B0D1E)] as CFArray, locations: [0, 1])!
     ctx.drawLinearGradient(sky, start: CGPoint(x: 512, y: 924), end: CGPoint(x: 512, y: 100), options: [])
 
-    // Warmer Lichtschein hinter der Taste
+    // Warm glow behind the key
     let glow = CGGradient(colorsSpace: space,
                           colors: [color(0xFFD27A, 0.95), color(0xFFB347, 0.45), color(0xFF9A3C, 0)] as CFArray,
                           locations: [0, 0.35, 1])!
     ctx.drawRadialGradient(glow, startCenter: CGPoint(x: 512, y: 470), startRadius: 0,
                            endCenter: CGPoint(x: 512, y: 470), endRadius: 360, options: [])
 
-    // Lichtstrahlen über der Taste
+    // Light rays above the key
     ctx.setLineCap(.round)
     ctx.setLineWidth(34)
     ctx.setStrokeColor(color(0xFFE3A8, 0.95))
@@ -52,7 +52,7 @@ func draw(_ ctx: CGContext, _ s: CGFloat) {
     ctx.strokePath()
     ctx.restoreGState()
 
-    // Tastenkappe: Sockel + etwas kleinere Oberseite
+    // Keycap: base + slightly smaller top
     let base = CGRect(x: 272, y: 230, width: 480, height: 330)
     ctx.saveGState()
     ctx.setShadow(offset: CGSize(width: 0, height: -10), blur: 40, color: color(0xFFB347, 0.9))
@@ -69,7 +69,7 @@ func draw(_ ctx: CGContext, _ s: CGFloat) {
     ctx.drawLinearGradient(cap, start: CGPoint(x: 512, y: top.maxY), end: CGPoint(x: 512, y: top.minY), options: [])
     ctx.restoreGState()
 
-    // Mond auf der Taste (die F6-Taste), leuchtend
+    // Glowing moon on the key (the F6 key)
     ctx.saveGState()
     ctx.setShadow(offset: .zero, blur: 30, color: color(0xFFD27A, 1))
     ctx.beginTransparencyLayer(auxiliaryInfo: nil)
@@ -105,4 +105,4 @@ task.arguments = ["-c", "icns", iconset.path, "-o", icns.path]
 try! task.run()
 task.waitUntilExit()
 try? FileManager.default.removeItem(at: iconset)
-print("Fertig: \(icns.path)")
+print("Done: \(icns.path)")

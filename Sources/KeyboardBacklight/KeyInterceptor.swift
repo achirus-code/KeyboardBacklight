@@ -2,8 +2,8 @@ import AppKit
 import ApplicationServices
 import os
 
-/// Globaler Event-Tap: fängt die zugewiesenen Tasten ab, bevor macOS sie verarbeitet
-/// (z. B. „Nicht stören“ oder Musik zurück). Benötigt den Bedienungshilfen-Zugriff.
+/// Global event tap: captures the assigned keys before macOS handles them
+/// (e.g. Dictation or Do Not Disturb). Requires accessibility access.
 final class KeyInterceptor {
     struct Press {
         let trigger: KeyTrigger
@@ -11,9 +11,9 @@ final class KeyInterceptor {
         let flags: CGEventFlags
     }
 
-    /// Liefert true, wenn die Taste verbraucht (nicht an macOS weitergereicht) werden soll.
+    /// Returns true if the key should be consumed (not passed on to macOS).
     var onPress: ((Press) -> Bool)?
-    /// Liefert true, wenn der zugehörige keyUp ebenfalls verschluckt werden soll.
+    /// Returns true if the matching keyUp should be swallowed as well.
     var isBound: ((KeyTrigger) -> Bool)?
 
     private var tap: CFMachPort?
@@ -49,14 +49,14 @@ final class KeyInterceptor {
             },
             userInfo: Unmanaged.passUnretained(self).toOpaque()
         ) else {
-            log.error("Event-Tap konnte nicht erstellt werden (Bedienungshilfen-Zugriff fehlt?)")
+            log.error("Could not create event tap (accessibility access missing?)")
             return false
         }
         self.tap = tap
         source = CFMachPortCreateRunLoopSource(nil, tap, 0)
         CFRunLoopAddSource(CFRunLoopGetMain(), source, .commonModes)
         CGEvent.tapEnable(tap: tap, enable: true)
-        log.info("Event-Tap aktiv")
+        log.info("Event tap active")
         return true
     }
 
@@ -76,7 +76,7 @@ final class KeyInterceptor {
         case .keyDown, .keyUp:
             let code = event.getIntegerValueField(.keyboardEventKeycode)
             let trigger = KeyTrigger.key(code)
-            // Nur die Funktionsreihe protokollieren, keine normalen Tasten
+            // Only log the function row, not regular keys
             if type == .keyDown, code >= 96 {
                 log.debug("keyDown \(code, privacy: .public)")
             }
@@ -94,7 +94,7 @@ final class KeyInterceptor {
             }
             let data = ns.data1
             let code = (data & 0xFFFF_0000) >> 16
-            let state = (data & 0xFF00) >> 8   // 0xA = gedrückt, 0xB = losgelassen
+            let state = (data & 0xFF00) >> 8   // 0xA = pressed, 0xB = released
             let trigger = KeyTrigger.media(code)
             log.debug("media \(code, privacy: .public) state \(state, privacy: .public)")
             if state != 0xA {

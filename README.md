@@ -1,54 +1,59 @@
 # KeyboardBacklight
 
-Menüleisten-App für macOS, die die Tastaturbeleuchtung wieder per Taste steuert – wie früher:
+A macOS menu bar app that puts keyboard backlight control back on the keys – like it used to be:
 
-- **🌙 Mond-Taste (F6)** → dunkler
-- **◀◀ Zurück-Taste (F7)** → heller
-- 16 Stufen, mit ⌥⇧ feinere Schritte
-- Einblendung mit Helligkeitsbalken, Menüleisten-Icon im Stil des alten macOS-Symbols
-- Tasten frei belegbar, Icon ausblendbar, Autostart beim Anmelden
+- **F5** → darker
+- **F6** → brighter
+- 16 steps, finer steps with ⌥⇧
+- Overlay with a brightness bar, menu bar icon in the style of the old macOS symbol
+- Keys can be reassigned, icon can be hidden, launch at login
 
-Getestet auf MacBook Air M3 mit macOS 26.
+Tested on a MacBook Air M3 with macOS 26.
 
 ## Download
 
-**[KeyboardBacklight.zip](https://github.com/achirus-code/KeyboardBacklight/releases/latest/download/KeyboardBacklight.zip)** – neueste Version für Apple-Chip und Intel. Entpacken, in „Programme“ ziehen und beim ersten Start unter *Systemeinstellungen › Datenschutz & Sicherheit* auf „Dennoch öffnen“ klicken (die App ist nicht notarisiert).
+**[KeyboardBacklight.zip](https://github.com/achirus-code/KeyboardBacklight/releases/latest/download/KeyboardBacklight.zip)** – latest version for Apple silicon and Intel.
+
+1. Unzip and move the app to your Applications folder.
+2. The app isn't notarized by Apple, so macOS blocks the first launch: close the message, then click **Open Anyway** in *System Settings › Privacy & Security*.
+3. Allow **Accessibility** access – without it the keys can't be captured.
 
 Website: https://achirus-code.github.io/KeyboardBacklight/
 
-## Bauen
+## Building
 
-Benötigt nur die Xcode Command Line Tools.
+Only needs the Xcode Command Line Tools.
 
 ```bash
-./build.sh           # baut KeyboardBacklight.app im Projektordner
-./build.sh install   # zusätzlich nach /Applications installieren und starten
-UNIVERSAL=1 ./build.sh   # für Apple-Chip und Intel (benötigt Xcode)
+./build.sh               # builds KeyboardBacklight.app in the project folder
+./build.sh install       # also installs to /Applications and launches the app
+UNIVERSAL=1 ./build.sh   # for Apple silicon and Intel (requires Xcode)
 ```
 
-Beim ersten Start fragt macOS nach dem **Bedienungshilfen-Zugriff** – ohne ihn können die Tasten nicht abgefangen werden.
+On first launch macOS asks for **Accessibility** access – without it the keys can't be captured.
 
-## Technik
+## How it works
 
-- Helligkeit über das private Framework `CoreBrightness` (`KeyboardBrightnessClient`)
-- Tasten über einen `CGEventTap` (Mond-Taste = Tastencode 178, Zurück = Media-Key `NX_KEYTYPE_REWIND`)
-- Bei hellem Umgebungslicht hält die Helligkeitsautomatik die Beleuchtung aus; sie wird deshalb beim ersten Tastendruck abgeschaltet (im Menü wieder aktivierbar)
-- App-Icon: `swift Scripts/make-icon.swift`
+- Brightness through the private framework `CoreBrightness` (`KeyboardBrightnessClient`)
+- Keys through a `CGEventTap`: F5 = Dictation (key code 176), F6 = Do Not Disturb (key code 178); with "Use F1, F2, etc. keys as standard function keys" the regular codes 96 and 97
+- In bright ambient light the automatic keyboard brightness keeps the backlight off, so it is turned off on the first key press (can be turned back on in the menu)
+- App icon: `swift Scripts/make-icon.swift`
 
 ## Website
 
-Die Projektseite liegt in `docs/` – statisches HTML, CSS und JavaScript ohne Build-Schritt und ohne externe Abhängigkeiten. Sie enthält eine interaktive Vorschau der App (Tastatur, Einblendung, Menüleisten-Symbol, Einstellungsfenster).
+The project website lives in `docs/` – static HTML, CSS and JavaScript with no build step and no external dependencies. It includes an interactive preview of the app (keyboard, overlay, menu bar icon, settings).
 
 ```bash
-python3 -m http.server -d docs   # lokal ansehen: http://localhost:8000
+python3 -m http.server -d docs   # view locally: http://localhost:8000
 ```
 
-Veröffentlicht wird sie per GitHub Actions (`.github/workflows/pages.yml`) bei jeder Änderung in `docs/` auf `main`. Einmalig nötig: *Settings → Pages → Source: GitHub Actions*.
+It is published with GitHub Actions (`.github/workflows/pages.yml`) whenever `docs/` changes on `main`. One-time setup: *Settings → Pages → Source: GitHub Actions*.
 
-## Release
+## Releases
 
-Ein Versions-Tag startet `.github/workflows/release.yml`: Der Workflow baut die App auf einem Mac-Runner für Apple-Chip und Intel, übernimmt die Version aus dem Tag und veröffentlicht `KeyboardBacklight.zip` als Release.
+`.github/workflows/release.yml` builds the app on a Mac runner for Apple silicon and Intel:
 
-```bash
-git tag v1.1 && git push origin v1.1
-```
+- **Pull requests:** test build, downloadable as a workflow artifact
+- **Push to `main`:** if there is no release yet for the version in `Info.plist` (`CFBundleShortVersionString`), it creates the release `v<version>` with `KeyboardBacklight.zip`
+
+To ship a new version, bump `CFBundleShortVersionString` in `Info.plist` and merge to `main`.

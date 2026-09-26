@@ -25,18 +25,18 @@
 
   // ——— Tastatur (MacBook, deutsches Layout) ———
   const FN = [
-    ['f1', 'i-sun-sm', 'Bildschirm dunkler'],
-    ['f2', 'i-sun-lg', 'Bildschirm heller'],
+    ['f1', 'i-sun-sm', 'Display Darker'],
+    ['f2', 'i-sun-lg', 'Display Brighter'],
     ['f3', 'i-mission', 'Mission Control'],
     ['f4', 'i-search', 'Spotlight 🔍'],
-    ['f5', 'i-mic', 'Diktat 🎙'],
-    ['f6', 'i-moon', 'Nicht stören 🌙'],
-    ['f7', 'i-rewind', 'Zurück ◀◀'],
-    ['f8', 'i-playpause', 'Wiedergabe ▶︎⏸'],
-    ['f9', 'i-forward', 'Weiter ▶▶'],
-    ['f10', 'i-speaker', 'Ton aus'],
-    ['f11', 'i-vol-down', 'Leiser'],
-    ['f12', 'i-vol-up', 'Lauter'],
+    ['f5', 'i-mic', 'Dictation 🎙'],
+    ['f6', 'i-moon', 'Do Not Disturb 🌙'],
+    ['f7', 'i-rewind', 'Previous ◀◀'],
+    ['f8', 'i-playpause', 'Play/Pause ▶︎⏸'],
+    ['f9', 'i-forward', 'Next ▶▶'],
+    ['f10', 'i-speaker', 'Mute'],
+    ['f11', 'i-vol-down', 'Volume Down'],
+    ['f12', 'i-vol-up', 'Volume Up'],
   ];
   // Physische Position → KeyboardEvent.code (deutsches Layout auf US-Codes)
   const LETTER_CODES = { Z: 'KeyY', Ü: 'BracketLeft', Ö: 'Semicolon', Ä: 'Quote' };
@@ -106,8 +106,8 @@
 
   // ——— Zustand ———
   const DEFAULTS = {
-    darker: [{ id: 'f6', label: 'Nicht stören 🌙' }, { id: 'f6', label: 'F6' }],
-    brighter: [{ id: 'f7', label: 'Zurück ◀◀' }, { id: 'f7', label: 'Zurückspulen ◀◀' }, { id: 'f7', label: 'F7' }],
+    darker: [{ id: 'f5', label: 'Dictation 🎙' }, { id: 'f5', label: 'F5' }],
+    brighter: [{ id: 'f6', label: 'Do Not Disturb 🌙' }, { id: 'f6', label: 'F6' }],
   };
   const state = {
     brightness: 6 / 16,
@@ -146,7 +146,7 @@
 
   const actionFor = id =>
     state.darker.some(t => t.id === id) ? 'darker' : state.brighter.some(t => t.id === id) ? 'brighter' : null;
-  const nameOf = id => (KEYS[id].fnLabel ? KEYS[id].name : `Taste ${KEYS[id].name}`);
+  const nameOf = id => KEYS[id].fnLabel || `Taste ${KEYS[id].name}`;
   const labelFor = action => (state[action].length ? state[action].map(t => t.label).join(', ') : '–');
   const status = html => { el.status.innerHTML = html; };
 
@@ -212,7 +212,7 @@
 
   function assign(id) {
     const action = state.learning;
-    const trigger = { id, label: KEYS[id].fnLabel ? KEYS[id].name : `Taste ${KEYS[id].name}` };
+    const trigger = { id, label: KEYS[id].fnLabel ? KEYS[id].name : `Key ${KEYS[id].name}` };
     state.darker = state.darker.filter(t => t.id !== id);
     state.brighter = state.brighter.filter(t => t.id !== id);
     state[action] = [trigger];
@@ -299,7 +299,7 @@
   // ——— Einstellungsfenster ———
   el.enabled.addEventListener('change', () => {
     state.enabled = el.enabled.checked;
-    status(state.enabled ? 'Tasten werden wieder abgefangen.' : 'Abfangen aus – „Nicht stören“ und „Zurück“ gehen wieder an macOS.');
+    status(state.enabled ? 'Tasten werden wieder abgefangen.' : 'Abfangen aus – die Tasten gehen wieder an macOS.');
     render();
   });
   el.range.addEventListener('input', () => {
@@ -333,11 +333,11 @@
   $('#btn-reset').addEventListener('click', () => {
     state.darker = DEFAULTS.darker;
     state.brighter = DEFAULTS.brighter;
-    status('Standardbelegung: Mond-Taste dunkler, Zurück-Taste heller.');
+    status('Standardbelegung: F5 dunkler, F6 heller.');
     render();
   });
-  $('#btn-quit').addEventListener('click', () => status('In der App beendet <b>Beenden</b> (⌘Q) KeyboardBacklight.'));
-  $('#btn-close').addEventListener('click', () => status('In der App schließt <b>Schließen</b> das Fenster wieder.'));
+  $('#btn-quit').addEventListener('click', () => status('In der App beendet <b>Quit</b> (⌘Q) KeyboardBacklight.'));
+  $('#btn-close').addEventListener('click', () => status('In der App schließt <b>Close</b> das Fenster wieder.'));
 
   el.mbApp.addEventListener('click', () => {
     el.popover.classList.add('is-flash');
@@ -384,10 +384,10 @@
 
     ['darker', 'brighter'].forEach(action => {
       const learning = state.learning === action;
-      el.labels[action].textContent = learning ? 'Taste drücken … (Esc)' : labelFor(action);
+      el.labels[action].textContent = learning ? 'Press a key … (Esc)' : labelFor(action);
       el.labels[action].classList.toggle('is-learning', learning);
     });
-    el.learnButtons.forEach(btn => { btn.textContent = state.learning === btn.dataset.learn ? 'Abbrechen' : 'Ändern'; });
+    el.learnButtons.forEach(btn => { btn.textContent = state.learning === btn.dataset.learn ? 'Cancel' : 'Change'; });
 
     el.hudUse.setAttribute('href', b > 0 ? '#i-light-max' : '#i-light-min');
     const lit = Math.round(b * 16);

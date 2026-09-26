@@ -1,7 +1,7 @@
 import Foundation
 
-/// Zugriff auf die Tastaturbeleuchtung über das private CoreBrightness-Framework
-/// (`KeyboardBrightnessClient`) – dieselbe Schnittstelle, die macOS selbst verwendet.
+/// Access to the keyboard backlight through the private CoreBrightness framework
+/// (`KeyboardBrightnessClient`) – the same interface macOS itself uses.
 final class Backlight {
     private let client: NSObject?
     private var keyboardID: UInt64 = 0
@@ -20,7 +20,7 @@ final class Backlight {
         }
         client = cls.init()
 
-        // Eingebaute Tastatur bevorzugen, sonst die erste mit Beleuchtung
+        // Prefer the built-in keyboard, otherwise the first one with a backlight
         let ids = (call("copyKeyboardBacklightIDs", as: CopyIDs.self)?(client!, sel("copyKeyboardBacklightIDs"))?
             .takeRetainedValue() as? [NSNumber] ?? []).map(\.uint64Value)
         let isBuiltIn = call("isKeyboardBuiltIn:", as: GetBool.self)
@@ -29,7 +29,7 @@ final class Backlight {
 
     var isAvailable: Bool { client != nil && keyboardID != 0 }
 
-    /// Helligkeit 0…1
+    /// Brightness 0…1
     var brightness: Float {
         get { getFloat("brightnessForKeyboard:") }
         set {
@@ -38,8 +38,8 @@ final class Backlight {
         }
     }
 
-    /// „Tastaturhelligkeit bei schwachem Licht anpassen“. Bei hellem Umgebungslicht hält die
-    /// Automatik die Beleuchtung aus – manuelle Werte greifen dann erst, wenn sie aus ist.
+    /// "Adjust keyboard brightness in low light". In bright ambient light the automatic adjustment
+    /// keeps the backlight off – manual values only take effect once it is turned off.
     var autoBrightness: Bool {
         get { getBool("isAutoBrightnessEnabledForKeyboard:") }
         set {
@@ -48,7 +48,7 @@ final class Backlight {
         }
     }
 
-    // MARK: - Objective-C-Aufrufe
+    // MARK: - Objective-C calls
 
     private func sel(_ name: String) -> Selector { NSSelectorFromString(name) }
 
