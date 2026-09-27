@@ -68,7 +68,10 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         state.refresh()
         popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
         NSApp.activate()
-        popover.contentViewController?.view.window?.makeKey()
+        let window = popover.contentViewController?.view.window
+        window?.makeKey()
+        // No control has keyboard focus – otherwise typing a space would flip the switch at the top
+        DispatchQueue.main.async { window?.makeFirstResponder(nil) }
     }
 
     func popoverDidShow(_ notification: Notification) {

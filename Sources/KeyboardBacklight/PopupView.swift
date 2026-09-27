@@ -7,15 +7,7 @@ struct PopupView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Keyboard Backlight").font(.headline)
-                Spacer()
-                Toggle("", isOn: $state.enabled)
-                    .toggleStyle(.switch)
-                    .controlSize(.small)
-                    .labelsHidden()
-                    .help("Capture keys on/off")
-            }
+            Text("Keyboard Backlight").font(.headline)
 
             if !state.backlight.isAvailable {
                 Label("No keyboard backlight found", systemImage: "exclamationmark.triangle")
@@ -36,6 +28,14 @@ struct PopupView: View {
                                                           set: { state.setAutoBrightness($0) }))
                 .help("In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off.")
 
+            Picker("Back to automatic after", selection: $state.autoRevertMinutes) {
+                ForEach(AppState.autoRevertChoices, id: \.self) { minutes in
+                    Text(Self.durationLabel(minutes)).tag(minutes)
+                }
+            }
+            .pickerStyle(.menu)
+            .fixedSize()
+
             if !state.hasAccessibility {
                 accessibilityWarning
             }
@@ -46,7 +46,6 @@ struct PopupView: View {
             keyRow("Darker", action: .darker)
             keyRow("Brighter", action: .brighter)
             HStack {
-                Button("Swap") { state.swapKeys() }
                 Button("Default") { state.resetKeys() }
                 Spacer()
             }
@@ -90,6 +89,14 @@ struct PopupView: View {
         .padding(14)
         .frame(width: 330)
 
+    }
+
+    private static func durationLabel(_ minutes: Int) -> LocalizedStringKey {
+        switch minutes {
+        case 0: "Never"
+        case ..<60: "\(minutes) min"
+        default: "\(minutes / 60) h"
+        }
     }
 
     private func keyRow(_ title: LocalizedStringKey, action: AppState.Action) -> some View {

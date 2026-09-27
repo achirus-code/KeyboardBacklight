@@ -7,6 +7,7 @@ A macOS menu bar app that puts keyboard backlight control back on the keys – l
 - 16 steps, finer steps with ⌥⇧
 - Overlay with a brightness bar, menu bar icon in the style of the old macOS symbol
 - Keys can be reassigned, icon can be hidden, launch at login
+- Optionally switches back to automatic brightness after a chosen time (5 minutes to 8 hours)
 - In English, German, French, Spanish and Italian (follows the system language)
 
 Tested on a MacBook Air M3 with macOS 26.

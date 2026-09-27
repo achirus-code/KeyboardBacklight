@@ -17,19 +17,15 @@
       darker: 'Dunkler', brighter: 'Heller',
       tagDarker: '− dunkler', tagBrighter: '+ heller',
       fineStep: 'feiner Schritt',
-      captureOff: 'Das Abfangen ist ausgeschaltet – macOS bekommt die Taste.',
       notBound: name => `<b>${name}</b> ist nicht belegt – die Taste geht wie gewohnt an macOS.`,
       assigned: (action, label) => `<b>${action}</b> liegt jetzt auf ${label}.`,
       cancelled: 'Abgebrochen.',
-      captureOnAgain: 'Tasten werden wieder abgefangen.',
-      captureOffNow: 'Abfangen aus – die Tasten gehen wieder an macOS.',
       brightness: pct => `Helligkeit ${pct} %`,
       autoOn: 'Automatik an – der nächste Tastendruck schaltet sie wieder ab.',
       autoOff: 'Automatik aus.',
       iconHidden: 'Icon ausgeblendet – die Tasten funktionieren weiter. Zurückholen: App erneut öffnen.',
       iconShown: 'Icon wieder in der Menüleiste.',
       learn: 'Jetzt eine Taste drücken – auf der Tastatur oben oder auf deiner eigenen. <b>esc</b> bricht ab.',
-      swapped: 'Tasten getauscht.',
       reset: 'Standardbelegung: F5 dunkler, F6 heller.',
       quit: 'In der App beendet <b>Beenden</b> (⌘Q) KeyboardBacklight. Ein Klick neben das Fenster schließt es.',
       pressKey: 'Taste drücken … (Esc)', cancel: 'Abbrechen', change: 'Ändern',
@@ -41,19 +37,15 @@
       darker: 'Darker', brighter: 'Brighter',
       tagDarker: '− darker', tagBrighter: '+ brighter',
       fineStep: 'fine step',
-      captureOff: 'Capturing is off – macOS gets the key.',
       notBound: name => `<b>${name}</b> isn't assigned – the key goes to macOS as usual.`,
       assigned: (action, label) => `<b>${action}</b> is now on ${label}.`,
       cancelled: 'Cancelled.',
-      captureOnAgain: 'Keys are captured again.',
-      captureOffNow: 'Capturing off – the keys go to macOS again.',
       brightness: pct => `Brightness ${pct} %`,
       autoOn: 'Automatic adjustment on – the next key press turns it off again.',
       autoOff: 'Automatic adjustment off.',
       iconHidden: 'Icon hidden – the keys keep working. To bring it back, open the app again.',
       iconShown: 'Icon is back in the menu bar.',
       learn: 'Now press a key – on the keyboard above or on your own. <b>esc</b> cancels.',
-      swapped: 'Keys swapped.',
       reset: 'Default: F5 darker, F6 brighter.',
       quit: 'In the app, <b>Quit</b> (⌘Q) quits KeyboardBacklight. Clicking outside the window closes it.',
       pressKey: 'Press a key … (Esc)', cancel: 'Cancel', change: 'Change',
@@ -163,7 +155,6 @@
   };
   const state = {
     brightness: 6 / 16,
-    enabled: true,
     auto: false,
     showHUD: true,
     hideIcon: false,
@@ -184,7 +175,6 @@
     hudUse: $('#hud-use'),
     hudBar: $('#hud-bar'),
     popover: $('#popover'),
-    enabled: $('#opt-enabled'),
     range: $('#opt-brightness'),
     pct: $('#opt-pct'),
     auto: $('#opt-auto'),
@@ -222,10 +212,6 @@
 
   function perform(action, fine, isRepeat) {
     kb.classList.remove('hint');
-    if (!state.enabled) {
-      status(TEXT.captureOff);
-      return;
-    }
     // Gedrückt halten: auf ein angenehmes Tempo bremsen
     if (isRepeat && performance.now() - lastChange < 90) return;
     step(action, fine);
@@ -349,11 +335,6 @@
   });
 
   // ——— Einstellungsfenster ———
-  el.enabled.addEventListener('change', () => {
-    state.enabled = el.enabled.checked;
-    status(state.enabled ? TEXT.captureOnAgain : TEXT.captureOffNow);
-    render();
-  });
   el.range.addEventListener('input', () => {
     setBrightness(Number(el.range.value), false);
     status(TEXT.brightness(Math.round(state.brightness * 100)));
@@ -375,11 +356,6 @@
     status(state.learning ? TEXT.learn : TEXT.cancelled);
     render();
   }));
-  $('#btn-swap').addEventListener('click', () => {
-    [state.darker, state.brighter] = [state.brighter, state.darker];
-    status(TEXT.swapped);
-    render();
-  });
   $('#btn-reset').addEventListener('click', () => {
     state.darker = DEFAULTS.darker;
     state.brighter = DEFAULTS.brighter;
@@ -405,7 +381,6 @@
   function render() {
     const b = state.brightness;
     kb.style.setProperty('--b', b.toFixed(4));
-    kb.classList.toggle('is-disabled', !state.enabled);
     kb.classList.toggle('is-learning', !!state.learning);
 
     $$('.key', kb).forEach(k => {
@@ -425,7 +400,6 @@
     el.range.value = b;
     el.range.style.setProperty('--pct', (b * 100).toFixed(2) + '%');
     el.pct.textContent = Math.round(b * 100) + ' %';
-    el.enabled.checked = state.enabled;
     el.auto.checked = state.auto;
     el.hud2.checked = state.showHUD;
     el.hide.checked = state.hideIcon;

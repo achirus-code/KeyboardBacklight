@@ -1,14 +1,12 @@
 /* KeyboardBacklight – fr */
 
 "Keyboard Backlight" = "Rétroéclairage du clavier";
-"Capture keys on/off" = "Intercepter les touches";
 "No keyboard backlight found" = "Aucun rétroéclairage de clavier trouvé";
 "Adjust to ambient light" = "Ajuster selon la lumière ambiante";
 "In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off." = "En pleine lumière, macOS éteint alors complètement le rétroéclairage. Appuyer sur une touche désactive le réglage automatique.";
 "Keys" = "Touches";
 "Darker" = "Plus sombre";
 "Brighter" = "Plus clair";
-"Swap" = "Inverser";
 "Default" = "Par défaut";
 "Hold ⌥⇧ for finer steps" = "Maintenez ⌥⇧ pour des paliers plus fins";
 "Show overlay when changing" = "Afficher l’indicateur lors du réglage";
@@ -24,6 +22,10 @@
 "Open System Settings" = "Ouvrir les Réglages Système";
 "Key %lld" = "Touche %lld";
 "Special key %lld" = "Touche spéciale %lld";
+"Back to automatic after" = "Rétablir l’automatique après";
+"Never" = "Jamais";
+"%lld min" = "%lld min";
+"%lld h" = "%lld h";
 
 /* Key names */
 "Dictation 🎙" = "Dictée 🎙";
