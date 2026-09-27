@@ -14,7 +14,6 @@ final class AppState: ObservableObject {
     @Published private(set) var hasAccessibility = KeyInterceptor.hasAccessibility
     @Published private(set) var learning: Action?
 
-    @Published var enabled: Bool { didSet { defaults.set(enabled, forKey: "enabled") } }
     @Published var showHUD: Bool { didSet { defaults.set(showHUD, forKey: "showHUD") } }
     /// Hides the menu bar icon. Takes effect immediately; only a manual launch or reopening the app
     /// shows the icon and settings again (see `StatusItemController.reveal`).
@@ -28,6 +27,14 @@ final class AppState: ObservableObject {
     @Published var iconVisible = true {
         didSet { if iconVisible != oldValue { log.info("Menu bar icon \(self.iconVisible ? "shown" : "hidden", privacy: .public)") } }
     }
+    /// Minutes after the last manual change until the automatic brightness is turned back on (0 = never)
+    @Published var autoRevertMinutes: Int {
+        didSet {
+            defaults.set(autoRevertMinutes, forKey: "autoRevertMinutes")
+            scheduleAutoRevert()
+        }
+    }
+    static let autoRevertChoices = [0, 5, 15, 30, 60, 120, 240, 480]
     @Published private(set) var darkerKeys: [KeyTrigger] { didSet { save(darkerKeys, "darkerKeys") } }
     @Published private(set) var brighterKeys: [KeyTrigger] { didSet { save(brighterKeys, "brighterKeys") } }
 
@@ -38,16 +45,20 @@ final class AppState: ObservableObject {
     private let log = Logger(subsystem: "de.achirus.keyboardbacklight", category: "ui")
     private var accessibilityTimer: Timer?
     private var lastChange = Date.distantPast
+    private var autoRevertTimer: Timer?
+    /// When the automatic brightness will be turned back on (nil = nothing scheduled)
+    private var autoRevertDate: Date?
 
     /// 16 steps like before; with ⌥⇧ held, quarter steps (64).
     private let steps = 16.0
     private let fineSteps = 64.0
 
     private init() {
-        defaults.register(defaults: ["enabled": true, "showHUD": true])
-        enabled = defaults.bool(forKey: "enabled")
+        defaults.register(defaults: ["showHUD": true])
+        defaults.removeObject(forKey: "enabled")   // former "capture keys" switch, no longer exists
         showHUD = defaults.bool(forKey: "showHUD")
         hideIcon = defaults.bool(forKey: "hideIcon")
+        autoRevertMinutes = defaults.integer(forKey: "autoRevertMinutes")
         darkerKeys = Self.load("darkerKeys") ?? KeyTrigger.defaultDarker
         brighterKeys = Self.load("brighterKeys") ?? KeyTrigger.defaultBrighter
         iconVisible = !hideIcon
@@ -60,6 +71,16 @@ final class AppState: ObservableObject {
         }
         refresh()
         startInterceptor()
+
+        // A switch back that was pending when the app quit (e.g. restart) – overdue ones happen right away
+        if let pending = defaults.object(forKey: "autoRevertDate") as? Date { startAutoRevertTimer(at: pending) }
+        // Timers don't count the time the Mac sleeps → check again after waking up
+        NSWorkspace.shared.notificationCenter.addObserver(forName: NSWorkspace.didWakeNotification, object: nil, queue: .main) { [weak self] _ in
+            MainActor.assumeIsolated {
+                guard let self, let date = self.autoRevertDate else { return }
+                self.startAutoRevertTimer(at: date)
+            }
+        }
     }
 
     // MARK: - Menu bar icon
@@ -86,6 +107,7 @@ final class AppState: ObservableObject {
         backlight.brightness = Float(clamped)
         brightness = clamped
         lastChange = Date()
+        scheduleAutoRevert()
         if showOverlay && showHUD { hud.show(level: clamped) }
     }
 
@@ -101,9 +123,45 @@ final class AppState: ObservableObject {
 
     func setAutoBrightness(_ on: Bool) {
         backlight.autoBrightness = on
+        autoBrightness = on
+        if on { cancelAutoRevert() } else { scheduleAutoRevert() }
         // The automatic adjustment takes over with a delay – read the actual value shortly after
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { [weak self] in self?.refresh() }
-        autoBrightness = on
+    }
+
+    // MARK: - Back to automatic brightness
+
+    /// (Re)starts the countdown back to the automatic brightness – after every manual change.
+    private func scheduleAutoRevert() {
+        guard autoRevertMinutes > 0, !autoBrightness else { return cancelAutoRevert() }
+        startAutoRevertTimer(at: Date().addingTimeInterval(Double(autoRevertMinutes) * 60))
+    }
+
+    private func startAutoRevertTimer(at date: Date) {
+        autoRevertTimer?.invalidate()
+        autoRevertDate = date
+        defaults.set(date, forKey: "autoRevertDate")
+        // A date in the past fires right away
+        let timer = Timer(fire: date, interval: 0, repeats: false) { [weak self] _ in
+            MainActor.assumeIsolated { self?.revertToAutoBrightness() }
+        }
+        timer.tolerance = 5
+        RunLoop.main.add(timer, forMode: .common)
+        autoRevertTimer = timer
+    }
+
+    private func cancelAutoRevert() {
+        autoRevertTimer?.invalidate()
+        autoRevertTimer = nil
+        autoRevertDate = nil
+        defaults.removeObject(forKey: "autoRevertDate")
+    }
+
+    private func revertToAutoBrightness() {
+        cancelAutoRevert()
+        guard !backlight.autoBrightness else { return }
+        log.info("Back to automatic brightness")
+        setAutoBrightness(true)
     }
 
     // MARK: - Keys
@@ -118,8 +176,6 @@ final class AppState: ObservableObject {
             learning = nil
             return true
         }
-        guard enabled else { return false }
-
         let action: Action
         if darkerKeys.contains(press.trigger) {
             action = .darker
@@ -136,7 +192,7 @@ final class AppState: ObservableObject {
     }
 
     private func isBound(_ trigger: KeyTrigger) -> Bool {
-        enabled && (darkerKeys.contains(trigger) || brighterKeys.contains(trigger))
+        darkerKeys.contains(trigger) || brighterKeys.contains(trigger)
     }
 
     func label(for action: Action) -> String {
@@ -155,10 +211,6 @@ final class AppState: ObservableObject {
         case .darker: darkerKeys = [trigger]
         case .brighter: brighterKeys = [trigger]
         }
-    }
-
-    func swapKeys() {
-        (darkerKeys, brighterKeys) = (brighterKeys, darkerKeys)
     }
 
     func resetKeys() {

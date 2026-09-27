@@ -366,8 +366,6 @@ p { margin: 0; }
 .key.tag-left .tag { left: auto; right: 0; transform: none; }
 .key.tag-right .tag { left: 0; transform: none; }
 .key.tag-left.tag-right .tag { left: 50%; right: auto; transform: translateX(-50%); }
-.kb.is-disabled .key.is-bound { box-shadow: 0 0 0 0.16cqi rgb(255 255 255 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.06); }
-.kb.is-disabled .key .tag { background: #4a4d5a; color: #d7d9e4; box-shadow: none; }
 .kb.is-learning .key:not(.touchid):hover { box-shadow: 0 0 0 0.16cqi var(--mac-blue); }
 .kb.hint .key.is-bound { animation: pulse 2.2s ease-in-out infinite; }
 @keyframes pulse {
@@ -429,7 +427,7 @@ p { margin: 0; }
 }
 
 .check { display: flex; align-items: center; gap: 6px; cursor: pointer; }
-.check input, .switch input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.check input { position: absolute; opacity: 0; width: 1px; height: 1px; }
 .check .box {
   position: relative; width: 14px; height: 14px; flex: none; border-radius: 3.5px;
   background: rgb(255 255 255 / 0.1); box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.25);
@@ -439,19 +437,7 @@ p { margin: 0; }
   content: ""; position: absolute; left: 4.5px; top: 1.5px; width: 4px; height: 8px;
   border: solid #fff; border-width: 0 1.8px 1.8px 0; transform: rotate(40deg);
 }
-.check input:focus-visible + .box, .switch input:focus-visible + .switch-track { outline: 2px solid var(--mac-blue); outline-offset: 2px; }
-
-.switch { position: relative; display: inline-flex; cursor: pointer; }
-.switch-track {
-  position: relative; width: 26px; height: 15px; border-radius: 99px;
-  background: rgb(255 255 255 / 0.18); transition: background 0.2s;
-}
-.switch-track::after {
-  content: ""; position: absolute; left: 1px; top: 1px; width: 13px; height: 13px; border-radius: 50%;
-  background: #fff; box-shadow: 0 1px 2px rgb(0 0 0 / 0.4); transition: transform 0.2s;
-}
-.switch input:checked + .switch-track { background: var(--mac-blue); }
-.switch input:checked + .switch-track::after { transform: translateX(11px); }
+.check input:focus-visible + .box { outline: 2px solid var(--mac-blue); outline-offset: 2px; }
 
 .mbtn {
   padding: 3px 11px; border: 0; border-radius: 5px;

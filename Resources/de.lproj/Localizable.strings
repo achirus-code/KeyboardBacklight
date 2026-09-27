@@ -1,14 +1,12 @@
 /* KeyboardBacklight – de */
 
 "Keyboard Backlight" = "Tastaturbeleuchtung";
-"Capture keys on/off" = "Tasten abfangen ein/aus";
 "No keyboard backlight found" = "Keine Tastaturbeleuchtung gefunden";
 "Adjust to ambient light" = "An Umgebungslicht anpassen";
 "In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off." = "Bei hellem Licht schaltet macOS die Beleuchtung dann ganz aus. Ein Tastendruck schaltet die Automatik ab.";
 "Keys" = "Tasten";
 "Darker" = "Dunkler";
 "Brighter" = "Heller";
-"Swap" = "Tauschen";
 "Default" = "Standard";
 "Hold ⌥⇧ for finer steps" = "⌥⇧ gedrückt halten für feinere Schritte";
 "Show overlay when changing" = "Anzeige beim Ändern einblenden";
@@ -24,6 +22,10 @@
 "Open System Settings" = "Systemeinstellungen öffnen";
 "Key %lld" = "Taste %lld";
 "Special key %lld" = "Sondertaste %lld";
+"Back to automatic after" = "Automatik zurück nach";
+"Never" = "Nie";
+"%lld min" = "%lld Min.";
+"%lld h" = "%lld Std.";
 
 /* Key names */
 "Dictation 🎙" = "Diktat 🎙";
