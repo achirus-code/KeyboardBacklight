@@ -28,13 +28,20 @@ struct PopupView: View {
                                                           set: { state.setAutoBrightness($0) }))
                 .help("In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off.")
 
-            Picker("Back to automatic after", selection: $state.autoRevertMinutes) {
-                ForEach(AppState.autoRevertChoices, id: \.self) { minutes in
-                    Text(Self.durationLabel(minutes)).tag(minutes)
+            // Sub-option of "Adjust to ambient light": turn it back on by itself after a while
+            HStack(spacing: 6) {
+                Toggle("Turn back on after", isOn: $state.autoRevertEnabled)
+                Picker("Turn back on after", selection: $state.autoRevertMinutes) {
+                    ForEach(AppState.autoRevertChoices, id: \.self) { minutes in
+                        Text(Self.durationLabel(minutes)).tag(minutes)
+                    }
                 }
+                .labelsHidden()
+                .pickerStyle(.menu)
+                .fixedSize()
+                .disabled(!state.autoRevertEnabled)
             }
-            .pickerStyle(.menu)
-            .fixedSize()
+            .padding(.leading, 20)
 
             if !state.hasAccessibility {
                 accessibilityWarning
@@ -92,11 +99,7 @@ struct PopupView: View {
     }
 
     private static func durationLabel(_ minutes: Int) -> LocalizedStringKey {
-        switch minutes {
-        case 0: "Never"
-        case ..<60: "\(minutes) min"
-        default: "\(minutes / 60) h"
-        }
+        minutes < 60 ? "\(minutes) min" : "\(minutes / 60) h"
     }
 
     private func keyRow(_ title: LocalizedStringKey, action: AppState.Action) -> some View {

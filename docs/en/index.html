@@ -148,6 +148,10 @@
             <label class="check" title="In bright light, macOS then turns the backlight off completely. Pressing a key turns the automatic adjustment off.">
               <input type="checkbox" id="opt-auto"><span class="box"></span>Adjust to ambient light
             </label>
+            <div class="po-row po-subopt">
+              <label class="check"><input type="checkbox" id="opt-revert"><span class="box"></span>Turn back on after</label>
+              <select class="po-select" id="opt-revert-min" aria-label="Turn back on after" disabled><option value="5">5 min</option><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">1 h</option><option value="120">2 h</option><option value="240">4 h</option><option value="480">8 h</option></select>
+            </div>
 
             <hr>
 
@@ -355,7 +359,7 @@
         </details>
         <details>
           <summary>The backlight still turns off in bright light.</summary>
-          <p>That's the macOS automatic brightness. KeyboardBacklight turns it off on the first key press. If you've turned it back on via “Adjust to ambient light” – or “Back to automatic after” has done so after the chosen time – it takes over again.</p>
+          <p>That's the macOS automatic brightness. KeyboardBacklight turns it off on the first key press. If you've turned it back on via “Adjust to ambient light” – or “Turn back on after” has done so after the chosen time – it takes over again.</p>
         </details>
         <details>
           <summary>Do I need to change “Use F1, F2, etc. keys as standard function keys”?</summary>

@@ -22,8 +22,7 @@
 "Open System Settings" = "Apri Impostazioni di Sistema";
 "Key %lld" = "Tasto %lld";
 "Special key %lld" = "Tasto speciale %lld";
-"Back to automatic after" = "Torna all’automatico dopo";
-"Never" = "Mai";
+"Turn back on after" = "Riattiva dopo";
 "%lld min" = "%lld min";
 "%lld h" = "%lld h";
 

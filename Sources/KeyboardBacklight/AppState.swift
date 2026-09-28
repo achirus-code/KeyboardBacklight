@@ -27,14 +27,20 @@ final class AppState: ObservableObject {
     @Published var iconVisible = true {
         didSet { if iconVisible != oldValue { log.info("Menu bar icon \(self.iconVisible ? "shown" : "hidden", privacy: .public)") } }
     }
-    /// Minutes after the last manual change until the automatic brightness is turned back on (0 = never)
+    /// Turn "Adjust to ambient light" back on after `autoRevertMinutes` without a manual change
+    @Published var autoRevertEnabled: Bool {
+        didSet {
+            defaults.set(autoRevertEnabled, forKey: "autoRevertEnabled")
+            scheduleAutoRevert()
+        }
+    }
     @Published var autoRevertMinutes: Int {
         didSet {
             defaults.set(autoRevertMinutes, forKey: "autoRevertMinutes")
             scheduleAutoRevert()
         }
     }
-    static let autoRevertChoices = [0, 5, 15, 30, 60, 120, 240, 480]
+    static let autoRevertChoices = [5, 15, 30, 60, 120, 240, 480]
     @Published private(set) var darkerKeys: [KeyTrigger] { didSet { save(darkerKeys, "darkerKeys") } }
     @Published private(set) var brighterKeys: [KeyTrigger] { didSet { save(brighterKeys, "brighterKeys") } }
 
@@ -58,7 +64,10 @@ final class AppState: ObservableObject {
         defaults.removeObject(forKey: "enabled")   // former "capture keys" switch, no longer exists
         showHUD = defaults.bool(forKey: "showHUD")
         hideIcon = defaults.bool(forKey: "hideIcon")
-        autoRevertMinutes = defaults.integer(forKey: "autoRevertMinutes")
+        // Earlier versions had only the time menu with "never" (0) instead of the checkbox
+        let storedMinutes = defaults.integer(forKey: "autoRevertMinutes")
+        autoRevertEnabled = defaults.object(forKey: "autoRevertEnabled") as? Bool ?? (storedMinutes > 0)
+        autoRevertMinutes = Self.autoRevertChoices.contains(storedMinutes) ? storedMinutes : 30
         darkerKeys = Self.load("darkerKeys") ?? KeyTrigger.defaultDarker
         brighterKeys = Self.load("brighterKeys") ?? KeyTrigger.defaultBrighter
         iconVisible = !hideIcon
@@ -133,7 +142,7 @@ final class AppState: ObservableObject {
 
     /// (Re)starts the countdown back to the automatic brightness – after every manual change.
     private func scheduleAutoRevert() {
-        guard autoRevertMinutes > 0, !autoBrightness else { return cancelAutoRevert() }
+        guard autoRevertEnabled, !autoBrightness else { return cancelAutoRevert() }
         startAutoRevertTimer(at: Date().addingTimeInterval(Double(autoRevertMinutes) * 60))
     }
 
