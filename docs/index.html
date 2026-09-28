@@ -156,6 +156,10 @@
             <label class="check" title="Bei hellem Licht schaltet macOS die Beleuchtung dann ganz aus. Ein Tastendruck schaltet die Automatik ab.">
               <input type="checkbox" id="opt-auto"><span class="box"></span>An Umgebungslicht anpassen
             </label>
+            <div class="po-row po-subopt">
+              <label class="check"><input type="checkbox" id="opt-revert"><span class="box"></span>Wieder einschalten nach</label>
+              <select class="po-select" id="opt-revert-min" aria-label="Wieder einschalten nach" disabled><option value="5">5 Min.</option><option value="15">15 Min.</option><option value="30" selected>30 Min.</option><option value="60">1 Std.</option><option value="120">2 Std.</option><option value="240">4 Std.</option><option value="480">8 Std.</option></select>
+            </div>
 
             <hr>
 
@@ -363,7 +367,7 @@
         </details>
         <details>
           <summary>Bei hellem Licht geht die Beleuchtung trotzdem aus.</summary>
-          <p>Das ist die Helligkeitsautomatik von macOS. KeyboardBacklight schaltet sie beim ersten Tastendruck ab. Falls du sie über „An Umgebungslicht anpassen“ wieder eingeschaltet hast – oder über „Automatik zurück nach“ nach der gewählten Zeit –, übernimmt sie erneut.</p>
+          <p>Das ist die Helligkeitsautomatik von macOS. KeyboardBacklight schaltet sie beim ersten Tastendruck ab. Falls du sie über „An Umgebungslicht anpassen“ wieder eingeschaltet hast – oder „Wieder einschalten nach“ hat das nach der gewählten Zeit getan –, übernimmt sie erneut.</p>
         </details>
         <details>
           <summary>Muss ich „F1, F2 usw. als Standard-Funktionstasten verwenden“ umstellen?</summary>

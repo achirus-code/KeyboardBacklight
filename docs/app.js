@@ -23,6 +23,8 @@
       brightness: pct => `Helligkeit ${pct} %`,
       autoOn: 'Automatik an – der nächste Tastendruck schaltet sie wieder ab.',
       autoOff: 'Automatik aus.',
+      revertOn: time => `Nach ${time} ohne Änderung schaltet die App „An Umgebungslicht anpassen“ wieder ein.`,
+      revertOff: 'Das Umgebungslicht bleibt aus, bis du es selbst einschaltest.',
       iconHidden: 'Icon ausgeblendet – die Tasten funktionieren weiter. Zurückholen: App erneut öffnen.',
       iconShown: 'Icon wieder in der Menüleiste.',
       learn: 'Jetzt eine Taste drücken – auf der Tastatur oben oder auf deiner eigenen. <b>esc</b> bricht ab.',
@@ -43,6 +45,8 @@
       brightness: pct => `Brightness ${pct} %`,
       autoOn: 'Automatic adjustment on – the next key press turns it off again.',
       autoOff: 'Automatic adjustment off.',
+      revertOn: time => `After ${time} without a change, the app turns “Adjust to ambient light” back on.`,
+      revertOff: 'Ambient light stays off until you turn it back on.',
       iconHidden: 'Icon hidden – the keys keep working. To bring it back, open the app again.',
       iconShown: 'Icon is back in the menu bar.',
       learn: 'Now press a key – on the keyboard above or on your own. <b>esc</b> cancels.',
@@ -156,6 +160,8 @@
   const state = {
     brightness: 6 / 16,
     auto: false,
+    revert: false,
+    revertMin: 30,
     showHUD: true,
     hideIcon: false,
     login: false,
@@ -178,6 +184,8 @@
     range: $('#opt-brightness'),
     pct: $('#opt-pct'),
     auto: $('#opt-auto'),
+    revert: $('#opt-revert'),
+    revertMin: $('#opt-revert-min'),
     hud2: $('#opt-hud'),
     hide: $('#opt-hide'),
     login: $('#opt-login'),
@@ -343,6 +351,16 @@
     state.auto = el.auto.checked;
     status(state.auto ? TEXT.autoOn : TEXT.autoOff);
   });
+  const revertTime = () => el.revertMin.selectedOptions[0].textContent;
+  el.revert.addEventListener('change', () => {
+    state.revert = el.revert.checked;
+    status(state.revert ? TEXT.revertOn(revertTime()) : TEXT.revertOff);
+    render();
+  });
+  el.revertMin.addEventListener('change', () => {
+    state.revertMin = Number(el.revertMin.value);
+    status(TEXT.revertOn(revertTime()));
+  });
   el.hud2.addEventListener('change', () => { state.showHUD = el.hud2.checked; });
   el.hide.addEventListener('change', () => {
     state.hideIcon = el.hide.checked;
@@ -401,6 +419,9 @@
     el.range.style.setProperty('--pct', (b * 100).toFixed(2) + '%');
     el.pct.textContent = Math.round(b * 100) + ' %';
     el.auto.checked = state.auto;
+    el.revert.checked = state.revert;
+    el.revertMin.value = String(state.revertMin);
+    el.revertMin.disabled = !state.revert;
     el.hud2.checked = state.showHUD;
     el.hide.checked = state.hideIcon;
     el.login.checked = state.login;
