@@ -15,7 +15,11 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         self.state = state
         super.init()
 
-        let host = NSHostingController(rootView: PopupView().environmentObject(state))
+        let popupView = PopupView(onAbout: { [weak self] in
+            self?.popover.performClose(nil)
+            AboutWindowController.shared.show()
+        })
+        let host = NSHostingController(rootView: popupView.environmentObject(state))
         host.sizingOptions = .preferredContentSize
         popover.contentViewController = host
         // Closing on a click outside is handled by `outsideClickMonitor`: `.transient` would already

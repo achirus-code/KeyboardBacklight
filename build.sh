@@ -16,6 +16,7 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN/KeyboardBacklight" "$APP/Contents/MacOS/KeyboardBacklight"
 cp Info.plist "$APP/Contents/Info.plist"
 cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
+cp Resources/BuyMeACoffee.png "$APP/Contents/Resources/BuyMeACoffee.png"
 cp -R Resources/*.lproj "$APP/Contents/Resources/"
 # Ad-hoc signature with a fixed requirement (bundle ID only): this way accessibility
 # access is kept after a rebuild.

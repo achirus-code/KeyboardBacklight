@@ -14,6 +14,11 @@
 "To bring it back, open the app again (Finder, Spotlight)." = "Zurückholen: App erneut öffnen (Finder, Spotlight).";
 "Launch at login" = "Beim Anmelden starten";
 "Quit" = "Beenden";
+"About" = "Über";
+"About %@" = "Über %@";
+"by %@" = "von %@";
+"Version %@" = "Version %@";
+"Buy me a coffee" = "Spendier mir einen Kaffee";
 "Press a key … (Esc)" = "Taste drücken … (Esc)";
 "Cancel" = "Abbrechen";
 "Change" = "Ändern";

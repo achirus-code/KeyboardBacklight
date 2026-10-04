@@ -30,6 +30,7 @@
       learn: 'Jetzt eine Taste drücken – auf der Tastatur oben oder auf deiner eigenen. <b>esc</b> bricht ab.',
       reset: 'Standardbelegung: F5 dunkler, F6 heller.',
       quit: 'In der App beendet <b>Beenden</b> (⌘Q) KeyboardBacklight. Ein Klick neben das Fenster schließt es.',
+      about: 'In der App öffnet <b>Über</b> ein Fenster mit Version und <a href="https://buymeacoffee.com/achirus" target="_blank" rel="noopener">☕ Spendier mir einen Kaffee</a>.',
       pressKey: 'Taste drücken … (Esc)', cancel: 'Abbrechen', change: 'Ändern',
     },
     en: {
@@ -52,6 +53,7 @@
       learn: 'Now press a key – on the keyboard above or on your own. <b>esc</b> cancels.',
       reset: 'Default: F5 darker, F6 brighter.',
       quit: 'In the app, <b>Quit</b> (⌘Q) quits KeyboardBacklight. Clicking outside the window closes it.',
+      about: 'In the app, <b>About</b> opens a window with the version and <a href="https://buymeacoffee.com/achirus" target="_blank" rel="noopener">☕ Buy me a coffee</a>.',
       pressKey: 'Press a key … (Esc)', cancel: 'Cancel', change: 'Change',
     },
   }[LANG];
@@ -381,6 +383,7 @@
     render();
   });
   $('#btn-quit').addEventListener('click', () => status(TEXT.quit));
+  $('#btn-about').addEventListener('click', () => status(TEXT.about));
 
   el.mbApp.addEventListener('click', () => {
     el.popover.classList.add('is-flash');

@@ -1,13 +1,15 @@
-import SwiftUI
+import AppKit
 
+// Plain AppKit entry point, no SwiftUI `App`: its placeholder Settings scene opened as an empty
+// window. The menu bar icon is managed by StatusItemController: MenuBarExtra(isInserted:)
+// hangs in an endless loop when it is hidden.
 @main
-struct KeyboardBacklightApp: App {
-    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-
-    // The menu bar icon is managed by StatusItemController (AppKit): MenuBarExtra(isInserted:)
-    // hangs in an endless loop when it is hidden.
-    var body: some Scene {
-        Settings { EmptyView() }
+enum KeyboardBacklightApp {
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = AppDelegate()
+        app.delegate = delegate
+        withExtendedLifetime(delegate) { app.run() }
     }
 }
 

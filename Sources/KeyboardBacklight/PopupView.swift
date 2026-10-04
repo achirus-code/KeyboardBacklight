@@ -2,6 +2,8 @@ import SwiftUI
 
 struct PopupView: View {
     @EnvironmentObject var state: AppState
+    /// Opens the about window (closes the popover first)
+    var onAbout: () -> Void = {}
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
     @State private var loginError: String?
 
@@ -88,6 +90,7 @@ struct PopupView: View {
             Divider()
 
             HStack {
+                Button("About") { onAbout() }
                 Spacer()
                 Button("Quit") { NSApp.terminate(nil) }
                     .keyboardShortcut("q")
