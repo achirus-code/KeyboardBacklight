@@ -22,6 +22,8 @@ Tested on a MacBook Air M3 with macOS 26.
 
 Website: https://achirus-code.github.io/KeyboardBacklight/en/ (English) · https://achirus-code.github.io/KeyboardBacklight/ (Deutsch)
 
+If you like the app: ☕ [Buy me a coffee](https://buymeacoffee.com/achirus)
+
 ## Building
 
 Only needs the Xcode Command Line Tools.
